@@ -1,0 +1,20 @@
+
+# Large generated datasets
+data/raw/rail_yojna_data/
+data/processed/
+data/validation/
+
+# Large data formats
+*.sqlite
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment/config
+.env
