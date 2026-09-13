@@ -1,0 +1,5310 @@
+{
+  "dataset_path": "/home/saksham/ML/Rail-yojna/data/raw/rail_yojna_data",
+  "parquet_tables": [
+    {
+      "table": "asset_condition_history",
+      "format": "parquet",
+      "rows": 600000,
+      "columns": 11,
+      "file_size_mb": 10.99,
+      "schema": [
+        {
+          "column": "measurement_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "condition_score",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "degradation_rate",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "measurement_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "measurement_value",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "measurement_unit",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "inspection_method",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "inspection_quality",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "measurement_confidence",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "assets",
+      "format": "parquet",
+      "rows": 30000,
+      "columns": 14,
+      "file_size_mb": 1.03,
+      "schema": [
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_subtype",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "chainage_start_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "chainage_end_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "installation_date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "manufacturer",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "model",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "design_life_years",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "criticality_score",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "operational_status",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "block_plan_versions",
+      "format": "parquet",
+      "rows": 1,
+      "columns": 7,
+      "file_size_mb": 0.0,
+      "schema": [
+        {
+          "column": "plan_version_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "created_at",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "valid_from",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "valid_until",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "reason_changed",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "modified_by",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "affected_block_count",
+          "dtype": "int64",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "block_requests",
+      "format": "parquet",
+      "rows": 47211,
+      "columns": 18,
+      "file_size_mb": 3.1,
+      "schema": [
+        {
+          "column": "request_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "request_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "requested_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "requested_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "requested_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "requesting_department",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "priority",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "trains_affected_count",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "operational_conflict_score",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "decision",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "decision_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "decision_reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "approved_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "approved_end",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "blocks",
+      "format": "parquet",
+      "rows": 13268,
+      "columns": 20,
+      "file_size_mb": 0.91,
+      "schema": [
+        {
+          "column": "block_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "request_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "block_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "purpose",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planned_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planned_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "actual_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "safety_margin_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "protection_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "electrical_isolation_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "signalling_isolation_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "affected_routes",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "status",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "overrun_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "cancellation_reason",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "data_provenance",
+      "format": "parquet",
+      "rows": 2751984,
+      "columns": 10,
+      "file_size_mb": 43.4,
+      "schema": [
+        {
+          "column": "provenance_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "table_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "record_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "source_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "source_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "generation_method",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "generation_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "data_quality_score",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "synthetic_flag",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "derived_flag",
+          "dtype": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "defects",
+      "format": "parquet",
+      "rows": 78856,
+      "columns": 18,
+      "file_size_mb": 2.55,
+      "schema": [
+        {
+          "column": "defect_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "detected_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "defect_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "defect_subtype",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "severity",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "priority",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "location_chainage_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "detection_method",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "description",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "temporary_action",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "speed_restriction_applied",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "speed_restriction_kmh",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "failure_occurred",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "resolved_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "root_cause",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "resolution_type",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "emergency_maintenance",
+      "format": "parquet",
+      "rows": 2309,
+      "columns": 14,
+      "file_size_mb": 0.16,
+      "schema": [
+        {
+          "column": "emergency_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "incident_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "detection_time",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "failure_time",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "emergency_response_time_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "emergency_block_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "emergency_block_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "repair_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "cause",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "severity",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "train_delay_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "estimated_cost",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "incidents",
+      "format": "parquet",
+      "rows": 3343,
+      "columns": 14,
+      "file_size_mb": 0.12,
+      "schema": [
+        {
+          "column": "incident_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "incident_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "severity",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "cause",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "train_affected",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "delay_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "emergency_block_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "passengers_affected",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "service_cancelled",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "resolution_time_minutes",
+          "dtype": "int64",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "inspections",
+      "format": "parquet",
+      "rows": 120000,
+      "columns": 12,
+      "file_size_mb": 3.37,
+      "schema": [
+        {
+          "column": "inspection_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "inspection_date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "inspection_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "inspector_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "condition_score",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "defect_detected",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "defect_count",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "inspection_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "inspection_method",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "inspection_quality",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "follow_up_required",
+          "dtype": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "machines",
+      "format": "parquet",
+      "rows": 450,
+      "columns": 9,
+      "file_size_mb": 0.02,
+      "schema": [
+        {
+          "column": "machine_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "machine_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "capability",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "current_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "operating_status",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "operating_hours",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "last_service_date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "next_service_date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "failure_rate",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "maintenance_cost",
+      "format": "parquet",
+      "rows": 51319,
+      "columns": 10,
+      "file_size_mb": 2.09,
+      "schema": [
+        {
+          "column": "cost_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "labor_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "machine_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "material_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "possession_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "disruption_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "emergency_cost",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "total_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "currency",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "maintenance_execution",
+      "format": "parquet",
+      "rows": 19094,
+      "columns": 20,
+      "file_size_mb": 1.62,
+      "schema": [
+        {
+          "column": "execution_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "requested_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "requested_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "approved_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "approved_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planned_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "actual_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "completion_status",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "delay_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "cancellation_flag",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "cancellation_reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "block_requested",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "block_granted",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "block_granted_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "block_actual_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "overrun_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "overrun_reason",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "maintenance_tasks",
+      "format": "parquet",
+      "rows": 51319,
+      "columns": 26,
+      "file_size_mb": 1.59,
+      "schema": [
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_category",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "priority",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "criticality",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "task_description",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planned_date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "earliest_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "latest_finish",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "estimated_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "minimum_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "maximum_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "setup_time_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "cleanup_time_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "safety_margin_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "block_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "block_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "electrical_isolation_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "signalling_isolation_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "weather_sensitive",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "temperature_constraint",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "dependency_task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_status",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "materials",
+      "format": "parquet",
+      "rows": 400,
+      "columns": 9,
+      "file_size_mb": 0.02,
+      "schema": [
+        {
+          "column": "material_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "material_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "quantity_available",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "storage_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "unit",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "unit_cost",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "lead_time_days",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "reserved_quantity",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "reorder_level",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "networks",
+      "format": "parquet",
+      "rows": 20,
+      "columns": 12,
+      "file_size_mb": 0.01,
+      "schema": [
+        {
+          "column": "network_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "country",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "railway_operator",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "region",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "timezone",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "gauge",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "electrification_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "voltage",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "signalling_system",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "operating_ruleset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "safety_ruleset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "unit_system",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "planning_decisions",
+      "format": "parquet",
+      "rows": 51319,
+      "columns": 12,
+      "file_size_mb": 1.69,
+      "schema": [
+        {
+          "column": "decision_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "request_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "scenario_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planner_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "system_recommendation",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planner_decision",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "decision_reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "approval_status",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "final_schedule",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_outcome",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "resource_availability",
+      "format": "parquet",
+      "rows": 14364,
+      "columns": 9,
+      "file_size_mb": 0.23,
+      "schema": [
+        {
+          "column": "availability_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "resource_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "available_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "available_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "shift",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "maximum_work_hours",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "break_requirement",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "unavailable_reason",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "resources",
+      "format": "parquet",
+      "rows": 1800,
+      "columns": 9,
+      "file_size_mb": 0.04,
+      "schema": [
+        {
+          "column": "resource_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "resource_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "resource_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "home_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "capability",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "capacity",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "skill_level",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "certification",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "operating_status",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "routes",
+      "format": "parquet",
+      "rows": 1800,
+      "columns": 9,
+      "file_size_mb": 0.04,
+      "schema": [
+        {
+          "column": "route_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "origin_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "destination_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_sequence",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_sequence",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "direction",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "distance_km",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "estimated_runtime_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "route_type",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "safety_constraints",
+      "format": "parquet",
+      "rows": 25,
+      "columns": 16,
+      "file_size_mb": 0.01,
+      "schema": [
+        {
+          "column": "constraint_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "jurisdiction",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "ruleset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "rule_category",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "rule_code",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "description",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "asset_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "minimum_block_duration_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "minimum_clearance_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "required_isolation",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "required_protection",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "required_personnel",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "weather_restriction",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "severity",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "hard_constraint",
+          "dtype": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "signalling",
+      "format": "parquet",
+      "rows": 1800,
+      "columns": 11,
+      "file_size_mb": 0.04,
+      "schema": [
+        {
+          "column": "signal_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "signal_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "location_chainage_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "direction",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "interlocking_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "control_system",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_circuit",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "axle_counter",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "route_dependency",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "speed_restrictions",
+      "format": "parquet",
+      "rows": 23918,
+      "columns": 12,
+      "file_size_mb": 0.82,
+      "schema": [
+        {
+          "column": "restriction_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "start_chainage_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "end_chainage_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "start_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "end_timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "normal_speed_kmh",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "restricted_speed_kmh",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "related_asset_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "related_defect_id",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "stations",
+      "format": "parquet",
+      "rows": 180,
+      "columns": 14,
+      "file_size_mb": 0.02,
+      "schema": [
+        {
+          "column": "station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "network_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "station_code",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "station_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "station_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "region",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "latitude",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "longitude",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "elevation_m",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "number_of_platforms",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "number_of_tracks",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "control_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "junction_flag",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "terminal_flag",
+          "dtype": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "target_definition",
+      "format": "parquet",
+      "rows": 8,
+      "columns": 6,
+      "file_size_mb": 0.01,
+      "schema": [
+        {
+          "column": "target_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "table",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "definition",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "label_source",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "prediction_timestamp_required",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "leakage_warning",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "task_materials",
+      "format": "parquet",
+      "rows": 51319,
+      "columns": 6,
+      "file_size_mb": 0.91,
+      "schema": [
+        {
+          "column": "task_material_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "material_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "quantity_required",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "quantity_used",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "availability_status",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "task_resources",
+      "format": "parquet",
+      "rows": 102345,
+      "columns": 9,
+      "file_size_mb": 2.3,
+      "schema": [
+        {
+          "column": "assignment_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "task_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "resource_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "role",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planned_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "planned_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_start",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_end",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "utilization_percent",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "timetable_versions",
+      "format": "parquet",
+      "rows": 1,
+      "columns": 6,
+      "file_size_mb": 0.0,
+      "schema": [
+        {
+          "column": "timetable_version_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "created_at",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "valid_from",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "valid_until",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "reason_changed",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "affected_train_count",
+          "dtype": "int64",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "track_sections",
+      "format": "parquet",
+      "rows": 900,
+      "columns": 18,
+      "file_size_mb": 0.05,
+      "schema": [
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "network_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "from_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "to_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "length_km",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "track_count",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "directionality",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "gauge",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "electrified",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "voltage",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "maximum_permitted_speed_kmh",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "current_speed_limit_kmh",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "gradient_percent",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "curvature",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "capacity_trains_per_day",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "criticality_score",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "tracks",
+      "format": "parquet",
+      "rows": 1631,
+      "columns": 9,
+      "file_size_mb": 0.03,
+      "schema": [
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_name",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "direction",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "electrification",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "maximum_speed_kmh",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "operational_status",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "signalling_area_id",
+          "dtype": "large_string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "traffic_demand",
+      "format": "parquet",
+      "rows": 32400,
+      "columns": 10,
+      "file_size_mb": 0.52,
+      "schema": [
+        {
+          "column": "demand_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "passenger_volume",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "freight_volume",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "train_count",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "passenger_train_count",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "freight_train_count",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "peak_hour",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "capacity_utilization_percent",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "train_delays",
+      "format": "parquet",
+      "rows": 130824,
+      "columns": 15,
+      "file_size_mb": 1.77,
+      "schema": [
+        {
+          "column": "delay_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "train_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "delay_minutes",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "delay_reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "primary_reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "secondary_reason",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "maintenance_related",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "infrastructure_related",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "weather_related",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "rolling_stock_related",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "congestion_related",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "signalling_related",
+          "dtype": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "train_movements",
+      "format": "parquet",
+      "rows": 525960,
+      "columns": 14,
+      "file_size_mb": 34.77,
+      "schema": [
+        {
+          "column": "movement_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "train_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "date",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "track_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "scheduled_entry",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "scheduled_exit",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_entry",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "actual_exit",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "scheduled_runtime_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "actual_runtime_minutes",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "delay_entry_minutes",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "delay_exit_minutes",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "speed_kmh",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "trains",
+      "format": "parquet",
+      "rows": 1800,
+      "columns": 13,
+      "file_size_mb": 0.09,
+      "schema": [
+        {
+          "column": "train_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "train_number",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "train_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "service_type",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "priority",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "origin_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "destination_station_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "scheduled_departure",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "scheduled_arrival",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "average_speed_kmh",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "capacity",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "passenger_capacity",
+          "dtype": "int64",
+          "nullable": true
+        },
+        {
+          "column": "freight_capacity",
+          "dtype": "int64",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "weather",
+      "format": "parquet",
+      "rows": 630000,
+      "columns": 13,
+      "file_size_mb": 17.49,
+      "schema": [
+        {
+          "column": "weather_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "timestamp",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "latitude",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "longitude",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "temperature_c",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "humidity_percent",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "rainfall_mm",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "wind_speed_kmh",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "visibility_km",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "weather_condition",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "flooding_flag",
+          "dtype": "bool",
+          "nullable": true
+        },
+        {
+          "column": "extreme_weather_flag",
+          "dtype": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "weather_forecast",
+      "format": "parquet",
+      "rows": 162000,
+      "columns": 10,
+      "file_size_mb": 2.4,
+      "schema": [
+        {
+          "column": "forecast_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "forecast_created_at",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "forecast_for",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "section_id",
+          "dtype": "large_string",
+          "nullable": true
+        },
+        {
+          "column": "temperature_forecast_c",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "rainfall_probability",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "expected_rainfall_mm",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "wind_speed_forecast_kmh",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "visibility_forecast_km",
+          "dtype": "double",
+          "nullable": true
+        },
+        {
+          "column": "extreme_weather_probability",
+          "dtype": "double",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "csv_tables": [
+    {
+      "table": "asset_condition_history",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 11,
+      "file_size_mb": 70.2,
+      "columns_info": [
+        {
+          "column": "measurement_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "condition_score",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "degradation_rate",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "measurement_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "measurement_value",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "measurement_unit",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_method",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_quality",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "measurement_confidence",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "assets",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 14,
+      "file_size_mb": 3.49,
+      "columns_info": [
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_subtype",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "station_id",
+          "dtype": "str",
+          "nulls_in_sample": 964
+        },
+        {
+          "column": "chainage_start_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "chainage_end_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "installation_date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "manufacturer",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "model",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "design_life_years",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "criticality_score",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operational_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "block_plan_versions",
+      "format": "csv",
+      "sample_rows": 1,
+      "columns": 7,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "plan_version_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "created_at",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "valid_from",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "valid_until",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "reason_changed",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "modified_by",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "affected_block_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "block_requests",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 18,
+      "file_size_mb": 13.4,
+      "columns_info": [
+        {
+          "column": "request_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "request_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "requested_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "requested_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "requested_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "requesting_department",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "priority",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "trains_affected_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operational_conflict_score",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "decision",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "decision_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "decision_reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "approved_start",
+          "dtype": "str",
+          "nulls_in_sample": 856
+        },
+        {
+          "column": "approved_end",
+          "dtype": "str",
+          "nulls_in_sample": 856
+        }
+      ]
+    },
+    {
+      "table": "blocks",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 20,
+      "file_size_mb": 3.19,
+      "columns_info": [
+        {
+          "column": "block_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "request_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "block_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "purpose",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planned_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planned_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "safety_margin_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "protection_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "electrical_isolation_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "signalling_isolation_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "affected_routes",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "overrun_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "cancellation_reason",
+          "dtype": "str",
+          "nulls_in_sample": 949
+        }
+      ]
+    },
+    {
+      "table": "data_dictionary",
+      "format": "csv",
+      "sample_rows": 445,
+      "columns": 15,
+      "file_size_mb": 0.08,
+      "columns_info": [
+        {
+          "column": "table_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "column_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "description",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "data_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "unit",
+          "dtype": "str",
+          "nulls_in_sample": 374
+        },
+        {
+          "column": "example_value",
+          "dtype": "str",
+          "nulls_in_sample": 10
+        },
+        {
+          "column": "nullable",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "primary_key",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "foreign_key",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "referenced_table",
+          "dtype": "str",
+          "nulls_in_sample": 387
+        },
+        {
+          "column": "referenced_column",
+          "dtype": "str",
+          "nulls_in_sample": 387
+        },
+        {
+          "column": "derived",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "synthetic",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "allowed_values",
+          "dtype": "float64",
+          "nulls_in_sample": 445
+        },
+        {
+          "column": "generation_logic",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "data_provenance",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 10,
+      "file_size_mb": 424.71,
+      "columns_info": [
+        {
+          "column": "provenance_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "table_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "record_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "source_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "source_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "generation_method",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "generation_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "data_quality_score",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "synthetic_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "derived_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "data_quality_report",
+      "format": "csv",
+      "sample_rows": 40,
+      "columns": 4,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "metric",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "value",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "details",
+          "dtype": "float64",
+          "nulls_in_sample": 40
+        }
+      ]
+    },
+    {
+      "table": "defects",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 18,
+      "file_size_mb": 18.85,
+      "columns_info": [
+        {
+          "column": "defect_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "detected_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "defect_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "defect_subtype",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "severity",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "priority",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "location_chainage_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "detection_method",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "description",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "temporary_action",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "speed_restriction_applied",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "speed_restriction_kmh",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "failure_occurred",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resolved_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 51
+        },
+        {
+          "column": "root_cause",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resolution_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "emergency_maintenance",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 14,
+      "file_size_mb": 0.47,
+      "columns_info": [
+        {
+          "column": "emergency_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "incident_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "detection_time",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "failure_time",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "emergency_response_time_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "emergency_block_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "emergency_block_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "repair_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "cause",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "severity",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_delay_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "estimated_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "incidents",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 14,
+      "file_size_mb": 0.47,
+      "columns_info": [
+        {
+          "column": "incident_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "incident_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "severity",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "cause",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_affected",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "delay_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "emergency_block_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "passengers_affected",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "service_cancelled",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resolution_time_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "inspections",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 12,
+      "file_size_mb": 13.32,
+      "columns_info": [
+        {
+          "column": "inspection_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspector_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "condition_score",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "defect_detected",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "defect_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_method",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "inspection_quality",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "follow_up_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "machines",
+      "format": "csv",
+      "sample_rows": 450,
+      "columns": 9,
+      "file_size_mb": 0.05,
+      "columns_info": [
+        {
+          "column": "machine_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "machine_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "capability",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "current_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operating_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operating_hours",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "last_service_date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "next_service_date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "failure_rate",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "maintenance_cost",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 10,
+      "file_size_mb": 3.7,
+      "columns_info": [
+        {
+          "column": "cost_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "labor_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "machine_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "material_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "possession_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "disruption_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "emergency_cost",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "total_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "currency",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "maintenance_execution",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 20,
+      "file_size_mb": 4.97,
+      "columns_info": [
+        {
+          "column": "execution_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "requested_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "requested_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "approved_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "approved_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planned_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "completion_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "delay_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "cancellation_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "cancellation_reason",
+          "dtype": "str",
+          "nulls_in_sample": 953
+        },
+        {
+          "column": "block_requested",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "block_granted",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "block_granted_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "block_actual_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "overrun_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "overrun_reason",
+          "dtype": "str",
+          "nulls_in_sample": 96
+        }
+      ]
+    },
+    {
+      "table": "maintenance_tasks",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 26,
+      "file_size_mb": 13.23,
+      "columns_info": [
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_category",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "priority",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "criticality",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_description",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planned_date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "earliest_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "latest_finish",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "estimated_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "minimum_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "maximum_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "setup_time_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "cleanup_time_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "safety_margin_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "block_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "block_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "electrical_isolation_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "signalling_isolation_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "weather_sensitive",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "temperature_constraint",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "dependency_task_id",
+          "dtype": "float64",
+          "nulls_in_sample": 1000
+        },
+        {
+          "column": "task_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "materials",
+      "format": "csv",
+      "sample_rows": 400,
+      "columns": 9,
+      "file_size_mb": 0.03,
+      "columns_info": [
+        {
+          "column": "material_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "material_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "quantity_available",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "storage_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "unit",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "unit_cost",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "lead_time_days",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "reserved_quantity",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "reorder_level",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "networks",
+      "format": "csv",
+      "sample_rows": 20,
+      "columns": 12,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "network_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "country",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "railway_operator",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "region",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "timezone",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "gauge",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "electrification_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "voltage",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "signalling_system",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operating_ruleset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "safety_ruleset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "unit_system",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "planning_decisions",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 12,
+      "file_size_mb": 8.58,
+      "columns_info": [
+        {
+          "column": "decision_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "request_id",
+          "dtype": "str",
+          "nulls_in_sample": 74
+        },
+        {
+          "column": "scenario_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planner_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "system_recommendation",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planner_decision",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "decision_reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "approval_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "final_schedule",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_outcome",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "resource_availability",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 9,
+      "file_size_mb": 1.38,
+      "columns_info": [
+        {
+          "column": "availability_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resource_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "available_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "available_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "shift",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "maximum_work_hours",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "break_requirement",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "unavailable_reason",
+          "dtype": "str",
+          "nulls_in_sample": 933
+        }
+      ]
+    },
+    {
+      "table": "resources",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 9,
+      "file_size_mb": 0.19,
+      "columns_info": [
+        {
+          "column": "resource_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resource_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resource_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "home_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "capability",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "capacity",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "skill_level",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "certification",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operating_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "routes",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 9,
+      "file_size_mb": 0.12,
+      "columns_info": [
+        {
+          "column": "route_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "origin_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "destination_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_sequence",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_sequence",
+          "dtype": "float64",
+          "nulls_in_sample": 1000
+        },
+        {
+          "column": "direction",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "distance_km",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "estimated_runtime_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "route_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "safety_constraints",
+      "format": "csv",
+      "sample_rows": 25,
+      "columns": 16,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "constraint_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "jurisdiction",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "ruleset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "rule_category",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "rule_code",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "description",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "asset_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "minimum_block_duration_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "minimum_clearance_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "required_isolation",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "required_protection",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "required_personnel",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "weather_restriction",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "severity",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "hard_constraint",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "schema_relationships",
+      "format": "csv",
+      "sample_rows": 58,
+      "columns": 5,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "table_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "column_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "referenced_table",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "referenced_column",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "relationship_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "signalling",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 11,
+      "file_size_mb": 0.16,
+      "columns_info": [
+        {
+          "column": "signal_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "signal_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "location_chainage_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "direction",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "interlocking_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "control_system",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_circuit",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "axle_counter",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "route_dependency",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "speed_restrictions",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 12,
+      "file_size_mb": 3.5,
+      "columns_info": [
+        {
+          "column": "restriction_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "start_chainage_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "end_chainage_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "start_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "end_timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "normal_speed_kmh",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "restricted_speed_kmh",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "related_asset_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "related_defect_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "stations",
+      "format": "csv",
+      "sample_rows": 180,
+      "columns": 14,
+      "file_size_mb": 0.02,
+      "columns_info": [
+        {
+          "column": "station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "network_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "station_code",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "station_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "station_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "region",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "latitude",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "longitude",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "elevation_m",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "number_of_platforms",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "number_of_tracks",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "control_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "junction_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "terminal_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "statistics_summary",
+      "format": "csv",
+      "sample_rows": 36,
+      "columns": 6,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "table_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "record_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "column_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "null_cells",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "duplicate_rows",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "memory_mb",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "target_class_balance",
+      "format": "csv",
+      "sample_rows": 3,
+      "columns": 2,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "target",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "positive_rate",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "target_definition",
+      "format": "csv",
+      "sample_rows": 8,
+      "columns": 6,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "target_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "table",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "definition",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "label_source",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "prediction_timestamp_required",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "leakage_warning",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "task_materials",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 6,
+      "file_size_mb": 2.89,
+      "columns_info": [
+        {
+          "column": "task_material_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "material_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "quantity_required",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "quantity_used",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "availability_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "task_resources",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 9,
+      "file_size_mb": 11.1,
+      "columns_info": [
+        {
+          "column": "assignment_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "task_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "resource_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "role",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planned_start",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "planned_end",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_start",
+          "dtype": "float64",
+          "nulls_in_sample": 1000
+        },
+        {
+          "column": "actual_end",
+          "dtype": "float64",
+          "nulls_in_sample": 1000
+        },
+        {
+          "column": "utilization_percent",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "timetable_versions",
+      "format": "csv",
+      "sample_rows": 1,
+      "columns": 6,
+      "file_size_mb": 0.0,
+      "columns_info": [
+        {
+          "column": "timetable_version_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "created_at",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "valid_from",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "valid_until",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "reason_changed",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "affected_train_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "track_sections",
+      "format": "csv",
+      "sample_rows": 900,
+      "columns": 18,
+      "file_size_mb": 0.12,
+      "columns_info": [
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "network_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "from_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "to_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "length_km",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "directionality",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "gauge",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "electrified",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "voltage",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "maximum_permitted_speed_kmh",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "current_speed_limit_kmh",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "gradient_percent",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "curvature",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "capacity_trains_per_day",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "criticality_score",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "tracks",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 9,
+      "file_size_mb": 0.14,
+      "columns_info": [
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_name",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "direction",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "electrification",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "maximum_speed_kmh",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "operational_status",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "signalling_area_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "traffic_demand",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 10,
+      "file_size_mb": 1.91,
+      "columns_info": [
+        {
+          "column": "demand_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "passenger_volume",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "freight_volume",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "passenger_train_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "freight_train_count",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "peak_hour",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "capacity_utilization_percent",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "train_delays",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 15,
+      "file_size_mb": 17.12,
+      "columns_info": [
+        {
+          "column": "delay_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "delay_minutes",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "delay_reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "primary_reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "secondary_reason",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "maintenance_related",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "infrastructure_related",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "weather_related",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "rolling_stock_related",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "congestion_related",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "signalling_related",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "train_movements",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 14,
+      "file_size_mb": 99.49,
+      "columns_info": [
+        {
+          "column": "movement_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "date",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "track_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "scheduled_entry",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "scheduled_exit",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_entry",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_exit",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "scheduled_runtime_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "actual_runtime_minutes",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "delay_entry_minutes",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "delay_exit_minutes",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "speed_kmh",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "trains",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 13,
+      "file_size_mb": 0.24,
+      "columns_info": [
+        {
+          "column": "train_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_number",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "train_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "service_type",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "priority",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "origin_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "destination_station_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "scheduled_departure",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "scheduled_arrival",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "average_speed_kmh",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "capacity",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "passenger_capacity",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "freight_capacity",
+          "dtype": "int64",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "weather",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 13,
+      "file_size_mb": 73.41,
+      "columns_info": [
+        {
+          "column": "weather_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "timestamp",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "latitude",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "longitude",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "temperature_c",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "humidity_percent",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "rainfall_mm",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "wind_speed_kmh",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "visibility_km",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "weather_condition",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "flooding_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "extreme_weather_flag",
+          "dtype": "bool",
+          "nulls_in_sample": 0
+        }
+      ]
+    },
+    {
+      "table": "weather_forecast",
+      "format": "csv",
+      "sample_rows": 1000,
+      "columns": 10,
+      "file_size_mb": 19.54,
+      "columns_info": [
+        {
+          "column": "forecast_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "forecast_created_at",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "forecast_for",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "section_id",
+          "dtype": "str",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "temperature_forecast_c",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "rainfall_probability",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "expected_rainfall_mm",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "wind_speed_forecast_kmh",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "visibility_forecast_km",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        },
+        {
+          "column": "extreme_weather_probability",
+          "dtype": "float64",
+          "nulls_in_sample": 0
+        }
+      ]
+    }
+  ]
+}
