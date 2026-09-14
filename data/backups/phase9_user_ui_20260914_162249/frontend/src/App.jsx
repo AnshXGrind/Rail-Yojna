@@ -40,6 +40,45 @@ function RiskChip({ value }) {
   );
 }
 
+function IndiaMapIcon() {
+  return (
+    <svg
+      className="india-map"
+      viewBox="0 0 90 110"
+      aria-hidden="true"
+    >
+      <path
+        d="M37 3
+           L47 9
+           L54 18
+           L65 21
+           L62 29
+           L74 35
+           L69 44
+           L78 50
+           L70 58
+           L64 69
+           L58 72
+           L55 83
+           L47 78
+           L42 91
+           L34 82
+           L27 78
+           L23 68
+           L14 65
+           L17 55
+           L10 48
+           L19 40
+           L13 33
+           L23 27
+           L21 18
+           L30 16
+           Z"
+      />
+    </svg>
+  );
+}
+
 function Metric({ label, value, meta, tone }) {
   return (
     <div className={`metric metric-${tone || "blue"}`}>
@@ -331,69 +370,43 @@ export default function App() {
       setMetrics(metricsResponse.data);
       setAssets(nextAssets);
       setPlan(nextPlan);
-
-      const plannerEvents = (
-        auditResponse.data.items || []
-      ).filter((event) =>
-        [
-          "PLANNING_APPROVED",
-          "PLANNING_MODIFIED",
-          "PLANNING_REJECTED",
-        ].includes(event.event_type)
-      );
-
-      setAudit(plannerEvents);
-
-      const initialAsset = nextAssets[0] || null;
-
-      const initialTask =
-        nextPlan.find(
-          (task) =>
-            initialAsset &&
-            task.asset_id === initialAsset.asset_id
-        ) ||
-        nextPlan[0] ||
-        null;
+      setAudit(auditResponse.data.items || []);
 
       setSelectedTask((current) => {
-        if (!current) return initialTask;
+        if (current) {
+          return (
+            nextPlan.find(
+              (task) =>
+                task.task_id === current.task_id
+            ) || nextPlan[0] || null
+          );
+        }
 
-        return (
-          nextPlan.find(
-            (task) =>
-              task.task_id === current.task_id
-          ) ||
-          nextPlan.find(
-            (task) =>
-              initialAsset &&
-              task.asset_id === initialAsset.asset_id
-          ) ||
-          initialTask
-        );
+        return nextPlan[0] || null;
       });
 
       setSelectedAsset((current) => {
-        if (!current) return initialAsset;
+        if (!current) return nextAssets[0] || null;
 
         return (
           nextAssets.find(
             (asset) =>
               asset.asset_id === current.asset_id
-          ) || initialAsset || current
+          ) || current
         );
       });
 
-      if (!selectedAsset && initialAsset?.asset_id) {
+      if (!selectedAsset && nextAssets[0]?.asset_id) {
         try {
           const detail = await axios.get(
             `${API}/assets/${encodeURIComponent(
-              initialAsset.asset_id
+              nextAssets[0].asset_id
             )}/risk`
           );
 
           setSelectedAsset(detail.data);
         } catch {
-          // Watchlist remains usable without detail loading.
+          // Watchlist still works without the detail request.
         }
       }
     } catch (err) {
@@ -590,11 +603,8 @@ export default function App() {
     return (
       <div className="boot-screen">
         <div className="boot-card">
-          <img
-            className="boot-logo"
-            src="/assets/rail-yojna-logo.png"
-            alt="रेल-योजना"
-          />
+          <IndiaMapIcon />
+          <h1>रेल-योजना</h1>
           <p>Maintenance decision support</p>
           <span>Connecting to live data…</span>
         </div>
@@ -606,11 +616,18 @@ export default function App() {
     <div className="app">
       <header className="header">
         <div className="brand">
-          <img
-            className="brand-logo"
-            src="/assets/rail-yojna-logo.png"
-            alt="रेल-योजना"
-          />
+          <div className="brand-map">
+            <IndiaMapIcon />
+          </div>
+
+          <div>
+            <div className="brand-title">
+              रेल-योजना
+            </div>
+            <div className="brand-subtitle">
+              Rail-Yojna · Railway Maintenance Intelligence
+            </div>
+          </div>
         </div>
 
         <div className="header-center">

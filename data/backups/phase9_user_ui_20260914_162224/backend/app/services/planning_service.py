@@ -142,7 +142,7 @@ def _row_to_dict(row: pd.Series) -> dict[str, Any]:
 
 def get_plan(limit: int = 50) -> list[dict]:
     df = load_plan()
-    limit = max(1, min(int(limit), 1500))
+    limit = max(1, min(int(limit), 500))
 
     selected = (
         df[df["selected"] == 1]

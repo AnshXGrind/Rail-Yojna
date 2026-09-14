@@ -76,7 +76,7 @@ def planning_plan(
     limit: int = Query(
         default=50,
         ge=1,
-        le=1500,
+        le=500,
     ),
 ):
     return {

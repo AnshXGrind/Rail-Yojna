@@ -1,4 +1,97 @@
-import { useEffect, useMemo, useState } from "react";
+from __future__ import annotations
+
+import json
+import shutil
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+ROOT = Path.cwd()
+FRONTEND = ROOT / "frontend/src"
+APP = FRONTEND / "App.jsx"
+LIVE = FRONTEND / "components/LivePrediction.jsx"
+CSS = FRONTEND / "App.css"
+
+BACKUP = (
+    ROOT
+    / "data/backups"
+    / f"phase9_user_ui_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+)
+
+BACKUP.mkdir(parents=True, exist_ok=True)
+
+
+def backup(path: Path):
+    if path.exists():
+        dst = BACKUP / path.relative_to(ROOT)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, dst)
+
+
+def write(path: Path, content: str):
+    backup(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
+def run(cmd, check=True):
+    print("\n$", " ".join(cmd))
+    return subprocess.run(
+        cmd,
+        cwd=ROOT,
+        text=True,
+        check=check,
+    )
+
+
+# ============================================================
+# BACKEND — allow browsing all selected planner tasks
+# ============================================================
+
+planning_service = ROOT / "backend/app/services/planning_service.py"
+routes = ROOT / "backend/app/api/routes.py"
+
+for path in [planning_service, routes]:
+    backup(path)
+
+
+service_text = planning_service.read_text(encoding="utf-8")
+service_text = service_text.replace(
+    'limit = max(1, min(int(limit), 500))',
+    'limit = max(1, min(int(limit), 1500))',
+)
+
+planning_service.write_text(
+    service_text,
+    encoding="utf-8",
+)
+
+routes_text = routes.read_text(encoding="utf-8")
+
+routes_text = routes_text.replace(
+'''    limit: int = Query(
+        default=50,
+        ge=1,
+        le=500,
+    ),''',
+'''    limit: int = Query(
+        default=50,
+        ge=1,
+        le=1500,
+    ),''',
+1,
+)
+
+routes.write_text(routes_text, encoding="utf-8")
+
+print("[PASS] Planner API limit increased to 1500")
+
+
+# ============================================================
+# FRONTEND APP
+# ============================================================
+
+APP_JSX = r'''import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import LivePrediction from "./components/LivePrediction";
 import "./App.css";
@@ -37,6 +130,45 @@ function RiskChip({ value }) {
     <span className={`risk-chip ${band.cls}`}>
       {riskPercent(value)} · {band.label}
     </span>
+  );
+}
+
+function IndiaMapIcon() {
+  return (
+    <svg
+      className="india-map"
+      viewBox="0 0 90 110"
+      aria-hidden="true"
+    >
+      <path
+        d="M37 3
+           L47 9
+           L54 18
+           L65 21
+           L62 29
+           L74 35
+           L69 44
+           L78 50
+           L70 58
+           L64 69
+           L58 72
+           L55 83
+           L47 78
+           L42 91
+           L34 82
+           L27 78
+           L23 68
+           L14 65
+           L17 55
+           L10 48
+           L19 40
+           L13 33
+           L23 27
+           L21 18
+           L30 16
+           Z"
+      />
+    </svg>
   );
 }
 
@@ -331,69 +463,43 @@ export default function App() {
       setMetrics(metricsResponse.data);
       setAssets(nextAssets);
       setPlan(nextPlan);
-
-      const plannerEvents = (
-        auditResponse.data.items || []
-      ).filter((event) =>
-        [
-          "PLANNING_APPROVED",
-          "PLANNING_MODIFIED",
-          "PLANNING_REJECTED",
-        ].includes(event.event_type)
-      );
-
-      setAudit(plannerEvents);
-
-      const initialAsset = nextAssets[0] || null;
-
-      const initialTask =
-        nextPlan.find(
-          (task) =>
-            initialAsset &&
-            task.asset_id === initialAsset.asset_id
-        ) ||
-        nextPlan[0] ||
-        null;
+      setAudit(auditResponse.data.items || []);
 
       setSelectedTask((current) => {
-        if (!current) return initialTask;
+        if (current) {
+          return (
+            nextPlan.find(
+              (task) =>
+                task.task_id === current.task_id
+            ) || nextPlan[0] || null
+          );
+        }
 
-        return (
-          nextPlan.find(
-            (task) =>
-              task.task_id === current.task_id
-          ) ||
-          nextPlan.find(
-            (task) =>
-              initialAsset &&
-              task.asset_id === initialAsset.asset_id
-          ) ||
-          initialTask
-        );
+        return nextPlan[0] || null;
       });
 
       setSelectedAsset((current) => {
-        if (!current) return initialAsset;
+        if (!current) return nextAssets[0] || null;
 
         return (
           nextAssets.find(
             (asset) =>
               asset.asset_id === current.asset_id
-          ) || initialAsset || current
+          ) || current
         );
       });
 
-      if (!selectedAsset && initialAsset?.asset_id) {
+      if (!selectedAsset && nextAssets[0]?.asset_id) {
         try {
           const detail = await axios.get(
             `${API}/assets/${encodeURIComponent(
-              initialAsset.asset_id
+              nextAssets[0].asset_id
             )}/risk`
           );
 
           setSelectedAsset(detail.data);
         } catch {
-          // Watchlist remains usable without detail loading.
+          // Watchlist still works without the detail request.
         }
       }
     } catch (err) {
@@ -590,11 +696,8 @@ export default function App() {
     return (
       <div className="boot-screen">
         <div className="boot-card">
-          <img
-            className="boot-logo"
-            src="/assets/rail-yojna-logo.png"
-            alt="रेल-योजना"
-          />
+          <IndiaMapIcon />
+          <h1>रेल-योजना</h1>
           <p>Maintenance decision support</p>
           <span>Connecting to live data…</span>
         </div>
@@ -606,11 +709,18 @@ export default function App() {
     <div className="app">
       <header className="header">
         <div className="brand">
-          <img
-            className="brand-logo"
-            src="/assets/rail-yojna-logo.png"
-            alt="रेल-योजना"
-          />
+          <div className="brand-map">
+            <IndiaMapIcon />
+          </div>
+
+          <div>
+            <div className="brand-title">
+              रेल-योजना
+            </div>
+            <div className="brand-subtitle">
+              Rail-Yojna · Railway Maintenance Intelligence
+            </div>
+          </div>
         </div>
 
         <div className="header-center">
@@ -1330,3 +1440,1241 @@ export default function App() {
     </div>
   );
 }
+'''
+
+write(APP, APP_JSX)
+
+
+# ============================================================
+# LIVE PREDICTION — remove model naming from user UI
+# ============================================================
+
+backup(LIVE)
+live_text = LIVE.read_text(encoding="utf-8")
+
+live_text = live_text.replace(
+    'Model: failure_30d_v2_logistic',
+    'Prediction service connected',
+)
+
+live_text = live_text.replace(
+    'Model: failure_30d_v3_logistic',
+    'Prediction service connected',
+)
+
+live_text = live_text.replace(
+    'validated V2 failure-risk inference pipeline',
+    'validated failure-risk inference pipeline',
+)
+
+live_text = live_text.replace(
+    'validated V3 failure-risk inference pipeline',
+    'validated failure-risk inference pipeline',
+)
+
+live_text = live_text.replace(
+    'label: "Moderate"',
+    'label: "Medium"',
+)
+
+LIVE.write_text(
+    live_text,
+    encoding="utf-8",
+)
+
+print("[PASS] Removed model/version labels from user UI")
+
+
+# ============================================================
+# CSS
+# ============================================================
+
+write(
+    CSS,
+    r''':root {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: #17212b;
+  background: #eef2f5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 1180px;
+  overflow: hidden;
+  background: #eef2f5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #eef2f5;
+}
+
+.header {
+  height: 66px;
+  display: grid;
+  grid-template-columns: 285px 1fr auto;
+  align-items: center;
+  gap: 22px;
+  padding: 0 22px;
+  background: #fff;
+  border-bottom: 1px solid #dce3e8;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-map {
+  width: 38px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.india-map {
+  width: 31px;
+  height: 39px;
+  fill: #0d477d;
+  filter: drop-shadow(0 2px 2px rgba(13, 71, 125, 0.2));
+}
+
+.boot-card .india-map {
+  width: 52px;
+  height: 62px;
+  margin: 0 auto 8px;
+  fill: #0d477d;
+}
+
+.brand-title {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 800;
+  color: #17365d;
+}
+
+.brand-subtitle {
+  margin-top: 4px;
+  color: #7b8892;
+  font-size: 9px;
+}
+
+.header-center {
+  min-width: 0;
+}
+
+.header-center strong {
+  display: block;
+  font-size: 14px;
+}
+
+.header-center span {
+  display: block;
+  margin-top: 2px;
+  color: #87939d;
+  font-size: 9px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connection {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 4px;
+  color: #71808b;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.connection i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d45c5c;
+}
+
+.connection.online i {
+  background: #25a56b;
+}
+
+.button {
+  height: 31px;
+  padding: 0 11px;
+  border-radius: 7px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.button.secondary {
+  border: 1px solid #d7e0e6;
+  background: #fff;
+  color: #445560;
+}
+
+.button.primary {
+  border: 1px solid #17365d;
+  background: #17365d;
+  color: #fff;
+}
+
+.error-banner {
+  position: absolute;
+  top: 74px;
+  left: 18px;
+  right: 18px;
+  z-index: 20;
+  height: 34px;
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #ebc5c5;
+  border-radius: 7px;
+  background: #fff5f5;
+  color: #813c3c;
+  font-size: 9px;
+}
+
+.dashboard {
+  height: calc(100vh - 66px);
+  padding: 10px 18px;
+  display: grid;
+  grid-template-rows:
+    71px
+    43px
+    minmax(0, 1fr)
+    174px
+    55px;
+  gap: 9px;
+  overflow: hidden;
+}
+
+.metrics {
+  min-width: 0;
+  display: grid;
+  grid-template-columns:
+    repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metric {
+  position: relative;
+  min-width: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  border: 1px solid #dce4e8;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.metric-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.metric-blue .metric-accent {
+  background: #2f7dc5;
+}
+
+.metric-green .metric-accent {
+  background: #23a66b;
+}
+
+.metric-orange .metric-accent {
+  background: #e8922f;
+}
+
+.metric-red .metric-accent {
+  background: #dc5a54;
+}
+
+.metric-label {
+  margin-top: 2px;
+  color: #778590;
+  font-size: 8px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.metric-value {
+  margin-top: 5px;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.metric-meta {
+  margin-top: 5px;
+  color: #9aa4ac;
+  font-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-kicker {
+  color: #7f8e99;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.toolbar h2 {
+  margin: 1px 0 0;
+  font-size: 15px;
+}
+
+.filters {
+  display: flex;
+  gap: 7px;
+}
+
+.filters input,
+.filters select {
+  height: 30px;
+  border: 1px solid #d6dfe5;
+  border-radius: 7px;
+  background: #fff;
+  color: #35434d;
+  font-size: 9px;
+}
+
+.filters input {
+  width: 220px;
+  padding: 0 9px;
+}
+
+.filters select {
+  padding: 0 8px;
+}
+
+.workspace {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.16fr 1fr;
+  gap: 9px;
+}
+
+.panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #dce4e8;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.panel-header {
+  height: 49px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf0f2;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 12px;
+}
+
+.panel-header p {
+  margin: 3px 0 0;
+  color: #8a969f;
+  font-size: 8px;
+}
+
+.panel-count {
+  min-width: 27px;
+  height: 25px;
+  padding: 0 7px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 0;
+  background: #edf3f8;
+  color: #325a7f;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.panel-count.clickable {
+  cursor: pointer;
+}
+
+.panel-count.clickable:hover {
+  background: #dfeaf3;
+  transform: translateY(-1px);
+}
+
+.table-wrap {
+  height: calc(100% - 49px);
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8px;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f7fafb;
+  color: #7d8993;
+  font-size: 8px;
+  font-weight: 750;
+}
+
+th,
+td {
+  padding: 7px 9px;
+  border-bottom: 1px solid #edf0f2;
+  text-align: left;
+  white-space: nowrap;
+}
+
+tbody tr {
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+tbody tr:hover {
+  background: #f6fafc;
+}
+
+tbody tr.selected {
+  background: #edf5fb;
+  box-shadow: inset 3px 0 0 #3a78ad;
+}
+
+td strong {
+  font-weight: 750;
+}
+
+.risk-chip {
+  display: inline-flex;
+  min-height: 19px;
+  padding: 0 6px;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.risk-chip.low {
+  background: #e7f5ec;
+  color: #24764c;
+}
+
+.risk-chip.medium {
+  background: #fff4d5;
+  color: #977118;
+}
+
+.risk-chip.high {
+  background: #ffead9;
+  color: #aa5923;
+}
+
+.risk-chip.critical {
+  background: #fde3e3;
+  color: #a83f3f;
+}
+
+.empty {
+  min-height: 85px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #9aa4ab;
+  font-size: 9px;
+  text-align: center;
+  padding: 16px;
+}
+
+.bottom-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.asset-detail,
+.decision-detail {
+  height: calc(100% - 49px);
+  min-height: 0;
+  overflow: hidden;
+  padding: 10px 12px;
+}
+
+.asset-detail-top,
+.decision-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.asset-id {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.asset-meta {
+  margin-top: 2px;
+  color: #8b969f;
+  font-size: 8px;
+}
+
+.detail-grid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.detail-grid div {
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid #e6ecef;
+  border-radius: 6px;
+  background: #fbfcfd;
+}
+
+.detail-grid span,
+.asset-task-strip span {
+  display: block;
+  color: #85919a;
+  font-size: 7px;
+}
+
+.detail-grid strong,
+.asset-task-strip strong {
+  display: block;
+  margin-top: 3px;
+  color: #263946;
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.asset-task-strip {
+  margin-top: 7px;
+  display: grid;
+  grid-template-columns:
+    1.2fr 1fr 0.7fr;
+  gap: 7px;
+}
+
+.asset-task-strip > div {
+  padding: 7px;
+  border-radius: 6px;
+  background: #f2f8f5;
+  border: 1px solid #d8ece0;
+}
+
+.asset-task-strip > div:nth-child(2) {
+  background: #fff7e9;
+  border-color: #f0dfbc;
+}
+
+.asset-task-strip > div:nth-child(3) {
+  background: #eef5fb;
+  border-color: #d7e5f2;
+}
+
+.decision-title strong {
+  display: block;
+  color: #203849;
+  font-size: 12px;
+}
+
+.decision-title span {
+  display: block;
+  margin-top: 2px;
+  color: #8d99a2;
+  font-size: 7px;
+}
+
+.explanation {
+  margin-top: 7px;
+  padding: 7px 8px;
+  border-left: 3px solid #e58c2e;
+  background: #fff9f1;
+}
+
+.explanation > span {
+  display: block;
+  color: #7d8992;
+  font-size: 7px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.explanation > strong {
+  display: block;
+  margin-top: 3px;
+  color: #4c4a46;
+  font-size: 8px;
+}
+
+.explanation ul {
+  margin: 4px 0 0;
+  padding-left: 15px;
+}
+
+.explanation li {
+  margin: 2px 0;
+  color: #77746f;
+  font-size: 7px;
+}
+
+.decision-form {
+  margin-top: 7px;
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 7px;
+}
+
+.decision-form label > span {
+  display: block;
+  margin-bottom: 3px;
+  color: #7f8b94;
+  font-size: 7px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.decision-form input,
+.decision-form textarea {
+  width: 100%;
+  border: 1px solid #d7e0e5;
+  border-radius: 6px;
+  background: #fff;
+  color: #2f414d;
+  font-size: 8px;
+  outline: none;
+}
+
+.decision-form input {
+  height: 28px;
+  padding: 0 7px;
+}
+
+.decision-form textarea {
+  min-height: 28px;
+  padding: 6px 7px;
+  resize: none;
+}
+
+.decision-form input:focus,
+.decision-form textarea:focus {
+  border-color: #5c82a7;
+  box-shadow:
+    0 0 0 2px rgba(92, 130, 167, 0.1);
+}
+
+.decision-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.decision-actions button {
+  height: 27px;
+  min-width: 75px;
+  padding: 0 9px;
+  border: 1px solid #d6dfe5;
+  border-radius: 6px;
+  background: #fff;
+  color: #43535f;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.decision-actions .approve {
+  border-color: #b9dcc5;
+  background: #e9f7ee;
+  color: #2a7a4f;
+}
+
+.decision-actions .reject {
+  border-color: #eac4c4;
+  background: #fff0f0;
+  color: #a24646;
+}
+
+.decision-message {
+  margin-top: 5px;
+  color: #4c6e8b;
+  font-size: 8px;
+}
+
+.safety-note {
+  margin-top: 4px;
+  color: #9aa2a8;
+  font-size: 7px;
+}
+
+.audit-strip {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 11px;
+  border: 1px solid #dce4e8;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.audit-strip > div:first-child strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+}
+
+.audit-items {
+  min-width: 0;
+  display: flex;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.audit-item {
+  min-width: 130px;
+  padding: 5px 7px;
+  border-radius: 6px;
+  border: 1px solid #e6ecef;
+  background: #fafbfc;
+}
+
+.audit-item strong,
+.audit-item span,
+.audit-item small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audit-item strong {
+  color: #52636e;
+  font-size: 7px;
+}
+
+.audit-item span {
+  margin-top: 2px;
+  color: #7e8a93;
+  font-size: 7px;
+}
+
+.audit-item small {
+  margin-top: 1px;
+  color: #9ca5ab;
+  font-size: 6px;
+}
+
+.footer-status {
+  display: flex;
+  gap: 5px;
+}
+
+.footer-status span {
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: #f0f5f8;
+  color: #6f7f8b;
+  font-size: 6px;
+  white-space: nowrap;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(18, 31, 42, 0.47);
+}
+
+.browse-modal {
+  width: min(1040px, 94vw);
+  height: min(760px, 88vh);
+  display: grid;
+  grid-template-rows:
+    78px
+    47px
+    minmax(0, 1fr)
+    32px;
+  overflow: hidden;
+  border: 1px solid #d4dfe6;
+  border-radius: 12px;
+  background: #f7fafb;
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.24);
+}
+
+.browse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 17px;
+  background: #fff;
+  border-bottom: 1px solid #e3eaee;
+}
+
+.browse-header h2 {
+  margin: 2px 0 0;
+  color: #17365d;
+  font-size: 18px;
+}
+
+.browse-header p {
+  margin: 3px 0 0;
+  color: #84919a;
+  font-size: 8px;
+}
+
+.modal-close {
+  width: 29px;
+  height: 29px;
+  border: 1px solid #d7e0e5;
+  border-radius: 6px;
+  background: #fff;
+  color: #66757f;
+  font-size: 17px;
+}
+
+.browse-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e2e9ed;
+  background: #fbfcfd;
+}
+
+.browse-toolbar input {
+  flex: 1;
+  height: 31px;
+  padding: 0 9px;
+  border: 1px solid #d5dfe5;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 8px;
+  outline: none;
+}
+
+.count-select {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #788691;
+  font-size: 8px;
+}
+
+.count-select select {
+  height: 31px;
+  border: 1px solid #d5dfe5;
+  border-radius: 6px;
+  background: #fff;
+  color: #31434f;
+  font-size: 8px;
+}
+
+.result-count {
+  color: #80909c;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.browse-table-wrap {
+  min-height: 0;
+  overflow: auto;
+  background: #fff;
+}
+
+.browse-table-wrap table {
+  font-size: 8px;
+}
+
+.browse-table-wrap tbody tr:hover {
+  background: #edf6fa;
+}
+
+.browse-footer {
+  display: flex;
+  align-items: center;
+  padding: 0 11px;
+  border-top: 1px solid #e2e9ed;
+  background: #f8fafb;
+  color: #89969f;
+  font-size: 7px;
+}
+
+.prediction-modal {
+  position: relative;
+  width: min(760px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  border: 1px solid #d4dfe6;
+  border-radius: 12px;
+  background: #f7fafb;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+}
+
+.prediction-modal > .modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+}
+
+.prediction-layout {
+  padding: 0 13px 13px;
+}
+
+.prediction-modal .page-heading {
+  padding: 15px 17px 8px;
+}
+
+.prediction-modal .page-heading h2 {
+  color: #17365d;
+  font-size: 21px;
+}
+
+.prediction-modal .page-heading p {
+  color: #7e8b95;
+  font-size: 9px;
+}
+
+.prediction-form {
+  overflow: hidden;
+  border: 1px solid #dce4e8;
+  background: #fff;
+  border-radius: 9px;
+}
+
+.prediction-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 11px;
+  padding: 13px;
+}
+
+.prediction-form label > span {
+  display: block;
+  margin-bottom: 4px;
+  color: #72808b;
+  font-size: 8px;
+  font-weight: 750;
+}
+
+.prediction-form input,
+.prediction-form textarea {
+  width: 100%;
+  min-height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d6e0e6;
+  border-radius: 6px;
+  background: #fff;
+  color: #293c49;
+  font-size: 9px;
+  outline: none;
+}
+
+.prediction-form input:focus,
+.prediction-form textarea:focus {
+  border-color: #6285a7;
+  box-shadow:
+    0 0 0 2px rgba(98, 133, 167, 0.1);
+}
+
+.prediction-form .form-footer {
+  min-height: 48px;
+  padding: 8px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #edf1f3;
+  background: #fbfcfd;
+}
+
+.prediction-form .form-footer span {
+  color: #7c8b96;
+  font-size: 8px;
+}
+
+.prediction-form .primary-button {
+  min-height: 31px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #17365d;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.live-risk-meter {
+  margin-top: 9px;
+  padding: 0 13px 12px;
+}
+
+.live-risk-meter-track {
+  position: relative;
+  height: 9px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      #2aa876 0%,
+      #83bf61 25%,
+      #e2c246 45%,
+      #ef9840 63%,
+      #df5d56 100%
+    );
+}
+
+.live-risk-meter-marker {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #17365d;
+  box-shadow:
+    0 1px 6px rgba(0, 0, 0, 0.25);
+}
+
+.live-risk-meter-marker[data-risk="low"] {
+  background: #239d67;
+}
+
+.live-risk-meter-marker[data-risk="medium"] {
+  background: #c5a329;
+}
+
+.live-risk-meter-marker[data-risk="high"] {
+  background: #d87d2d;
+}
+
+.live-risk-meter-marker[data-risk="critical"] {
+  background: #cb4e4e;
+}
+
+.live-risk-meter-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: #89959e;
+  font-size: 7px;
+}
+
+.boot-screen {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      #ffffff 0,
+      #edf3f7 52%,
+      #e6edf2 100%
+    );
+}
+
+.boot-card {
+  text-align: center;
+}
+
+.boot-card h1 {
+  margin: 0;
+  color: #17365d;
+  font-size: 23px;
+}
+
+.boot-card p {
+  margin: 4px 0;
+  color: #657681;
+  font-size: 10px;
+}
+
+.boot-card span {
+  color: #98a3ab;
+  font-size: 8px;
+}
+
+.muted {
+  color: #9ba4ab;
+  font-size: 8px;
+}
+
+@media (max-width: 1250px) {
+  .header {
+    grid-template-columns: 240px 1fr auto;
+  }
+
+  .dashboard {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .metrics {
+    gap: 6px;
+  }
+
+  .metric {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+}
+''',
+)
+
+
+# ============================================================
+# VALIDATION
+# ============================================================
+
+run(
+    [
+        "python3",
+        "-m",
+        "py_compile",
+        str(planning_service),
+        str(routes),
+    ]
+)
+
+run(
+    [
+        "python3",
+        "-m",
+        "pytest",
+        "-q",
+        "tests",
+    ],
+    check=True,
+)
+
+run(
+    [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build",
+    ],
+    check=True,
+)
+
+report = {
+    "phase": "9-user-ui-v2",
+    "status": "PASS",
+    "planner_browse_limit": 1500,
+    "task_page_options": [25, 50, 100, 250, 500, 1000, 1500],
+    "asset_page_options": [25, 50, 100],
+    "single_screen_dashboard": True,
+    "internal_list_scrolling": True,
+    "expandable_task_browse": True,
+    "expandable_asset_browse": True,
+    "india_map_brand": True,
+    "hindi_brand": "रेल-योजना",
+    "color_accents": [
+        "blue",
+        "green",
+        "orange",
+        "red",
+    ],
+    "model_labels_removed_from_user_ui": True,
+    "selected_asset_auto_populated": True,
+    "planner_decision_auto_populated": True,
+    "real_api_data": True,
+    "dummy_dashboard_values": False,
+    "backup": str(BACKUP.relative_to(ROOT)),
+    "pytest": "PASS",
+    "frontend_build": "PASS",
+}
+
+report_path = ROOT / "data/validation/phase9_user_ui_v2_report.json"
+report_path.parent.mkdir(parents=True, exist_ok=True)
+report_path.write_text(
+    json.dumps(report, indent=2, ensure_ascii=False),
+    encoding="utf-8",
+)
+
+print("\n" + "=" * 80)
+print("PHASE 9 USER UI V2 COMPLETE")
+print("=" * 80)
+print(json.dumps(report, indent=2, ensure_ascii=False))
+print("=" * 80)

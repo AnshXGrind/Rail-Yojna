@@ -298,7 +298,7 @@ export default function LivePrediction({ onAssetOpen }) {
 
           <div className="form-footer">
             <span>
-              Prediction service connected
+              Model: failure_30d_v3_logistic
             </span>
 
             <button

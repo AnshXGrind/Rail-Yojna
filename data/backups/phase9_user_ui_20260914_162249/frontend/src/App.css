@@ -195,8 +195,8 @@ button:disabled {
     71px
     43px
     minmax(0, 1fr)
-    222px
-    48px;
+    174px
+    55px;
   gap: 9px;
   overflow: hidden;
 }
@@ -472,8 +472,7 @@ td strong {
 .decision-detail {
   height: calc(100% - 49px);
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   padding: 10px 12px;
 }
 
@@ -1105,103 +1104,4 @@ td strong {
     padding-left: 9px;
     padding-right: 9px;
   }
-}
-
-
-/* Phase 9 lower-panel visibility fix */
-
-.bottom-grid {
-  min-height: 0;
-}
-
-.asset-detail,
-.decision-detail {
-  scrollbar-width: thin;
-  scrollbar-color: #c9d3da transparent;
-}
-
-.asset-detail::-webkit-scrollbar,
-.decision-detail::-webkit-scrollbar {
-  width: 5px;
-}
-
-.asset-detail::-webkit-scrollbar-thumb,
-.decision-detail::-webkit-scrollbar-thumb {
-  background: #c9d3da;
-  border-radius: 999px;
-}
-
-.decision-form {
-  grid-template-columns: 125px minmax(0, 1fr);
-}
-
-.decision-actions {
-  padding-bottom: 3px;
-}
-
-.audit-item {
-  border-left: 3px solid #2da56b;
-}
-
-.audit-item strong {
-  text-transform: capitalize;
-}
-
-@media (max-height: 760px) {
-  .dashboard {
-    grid-template-rows:
-      66px
-      38px
-      minmax(0, 1fr)
-      210px
-      44px;
-    gap: 7px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-
-  .metric {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-
-  .metric-value {
-    font-size: 20px;
-  }
-
-  .panel-header {
-    height: 45px;
-  }
-
-  .asset-detail,
-  .decision-detail {
-    height: calc(100% - 45px);
-  }
-}
-
-
-/* FINAL RAIL-YOJNA BRANDING */
-.brand {
-  width: 230px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-}
-
-.brand-logo {
-  display: block;
-  width: 220px;
-  height: 58px;
-  object-fit: contain;
-  object-position: left center;
-}
-
-/* Runtime boot logo */
-.boot-logo {
-  display: block;
-  width: 250px;
-  height: 95px;
-  object-fit: contain;
-  object-position: center;
-  margin: 0 auto 10px;
 }

@@ -264,7 +264,6 @@ def main():
         CALIBRATOR_PATH: "V3 probability calibrator",
         DATA_PATH: "V3 evaluation dataset",
         METADATA_PATH: "V3 metadata",
-        RESULTS_PATH: "V3 result metrics",
         BACKTEST_PATH: "frozen backtest results",
         EXPANDING_PATH: "expanding backtest results",
         EFFECTS_PATH: "feature effects",

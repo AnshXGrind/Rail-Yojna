@@ -55,7 +55,7 @@ function getRiskBand(value) {
 
   if (probability >= 0.05) {
     return {
-      label: "Medium",
+      label: "Moderate",
       cls: "moderate",
     };
   }
@@ -298,7 +298,7 @@ export default function LivePrediction({ onAssetOpen }) {
 
           <div className="form-footer">
             <span>
-              Prediction service connected
+              Model: failure_30d_v2_logistic
             </span>
 
             <button

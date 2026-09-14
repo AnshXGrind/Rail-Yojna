@@ -5,9 +5,6 @@ import "./App.css";
 
 const API = "http://127.0.0.1:8000/api/v1";
 
-const TASK_PAGE_OPTIONS = [25, 50, 100, 250, 500, 1000, 1500];
-const ASSET_PAGE_OPTIONS = [25, 50, 100];
-
 function riskBand(value) {
   const risk = Number(value || 0);
 
@@ -40,10 +37,9 @@ function RiskChip({ value }) {
   );
 }
 
-function Metric({ label, value, meta, tone }) {
+function Metric({ label, value, meta }) {
   return (
-    <div className={`metric metric-${tone || "blue"}`}>
-      <div className="metric-accent" />
+    <div className="metric">
       <div className="metric-label">{label}</div>
       <div className="metric-value">{value}</div>
       <div className="metric-meta">{meta}</div>
@@ -53,219 +49,6 @@ function Metric({ label, value, meta, tone }) {
 
 function Empty({ children }) {
   return <div className="empty">{children}</div>;
-}
-
-function ListModal({
-  title,
-  subtitle,
-  items,
-  total,
-  kind,
-  onClose,
-  onSelect,
-}) {
-  const isTasks = kind === "tasks";
-  const options = isTasks
-    ? TASK_PAGE_OPTIONS
-    : ASSET_PAGE_OPTIONS;
-
-  const [visible, setVisible] = useState(
-    isTasks ? 100 : 50
-  );
-
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(() => {
-    const term = search.trim().toLowerCase();
-
-    if (!term) return items;
-
-    return items.filter((item) => {
-      if (isTasks) {
-        return [
-          item.task_id,
-          item.asset_id,
-          item.task_type,
-          item.section_id,
-          item.track_id,
-          item.priority,
-        ]
-          .filter(Boolean)
-          .some((value) =>
-            String(value).toLowerCase().includes(term)
-          );
-      }
-
-      return String(item.asset_id || "")
-        .toLowerCase()
-        .includes(term);
-    });
-  }, [items, search, isTasks]);
-
-  const shown = filtered.slice(0, visible);
-
-  return (
-    <div
-      className="modal-backdrop"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <div className="browse-modal">
-        <div className="browse-header">
-          <div>
-            <div className="section-kicker">
-              {isTasks ? "MAINTENANCE QUEUE" : "RISK WATCHLIST"}
-            </div>
-
-            <h2>{title}</h2>
-            <p>{subtitle}</p>
-          </div>
-
-          <button
-            className="modal-close"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="browse-toolbar">
-          <input
-            value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
-            placeholder={
-              isTasks
-                ? "Search task, asset, priority…"
-                : "Search asset…"
-            }
-          />
-
-          <label className="count-select">
-            <span>Show</span>
-
-            <select
-              value={visible}
-              onChange={(event) =>
-                setVisible(Number(event.target.value))
-              }
-            >
-              {options.map((option) => (
-                <option
-                  key={option}
-                  value={option}
-                >
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <span className="result-count">
-            {filtered.length.toLocaleString()} available
-            {total != null && ` / ${total.toLocaleString()}`}
-          </span>
-        </div>
-
-        <div className="browse-table-wrap">
-          {shown.length === 0 ? (
-            <Empty>No matching records.</Empty>
-          ) : (
-            <table>
-              <thead>
-                {isTasks ? (
-                  <tr>
-                    <th>Task</th>
-                    <th>Asset</th>
-                    <th>Risk</th>
-                    <th>Priority</th>
-                    <th>Duration</th>
-                    <th>Block</th>
-                  </tr>
-                ) : (
-                  <tr>
-                    <th>Asset</th>
-                    <th>Risk</th>
-                    <th>Condition</th>
-                    <th>Criticality</th>
-                  </tr>
-                )}
-              </thead>
-
-              <tbody>
-                {shown.map((item) => (
-                  <tr
-                    key={
-                      isTasks
-                        ? item.task_id
-                        : item.asset_id
-                    }
-                    onClick={() => {
-                      onSelect(item);
-                      onClose();
-                    }}
-                  >
-                    {isTasks ? (
-                      <>
-                        <td>
-                          <strong>{item.task_id}</strong>
-                        </td>
-                        <td>{item.asset_id}</td>
-                        <td>
-                          <RiskChip
-                            value={item.calibrated_risk}
-                          />
-                        </td>
-                        <td>{item.priority}</td>
-                        <td>
-                          {item.estimated_duration_minutes} min
-                        </td>
-                        <td>
-                          {item.block_required
-                            ? "Required"
-                            : "No"}
-                        </td>
-                      </>
-                    ) : (
-                      <>
-                        <td>
-                          <strong>{item.asset_id}</strong>
-                        </td>
-                        <td>
-                          <RiskChip value={item.risk} />
-                        </td>
-                        <td>
-                          {item.condition_score != null
-                            ? Number(
-                                item.condition_score
-                              ).toFixed(1)
-                            : "—"}
-                        </td>
-                        <td>
-                          {item.criticality != null
-                            ? Number(
-                                item.criticality
-                              ).toFixed(2)
-                            : "—"}
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        <div className="browse-footer">
-          Showing {shown.length.toLocaleString()} of{" "}
-          {filtered.length.toLocaleString()} filtered records
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function App() {
@@ -286,13 +69,9 @@ export default function App() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
 
-  const [browse, setBrowse] = useState(null);
   const [predictionOpen, setPredictionOpen] = useState(false);
-
   const [decisionBusy, setDecisionBusy] = useState(false);
   const [decisionMessage, setDecisionMessage] = useState("");
-  const [decisionActor, setDecisionActor] = useState("planner");
-  const [decisionNote, setDecisionNote] = useState("");
 
   async function loadDashboard(initial = false) {
     try {
@@ -315,7 +94,7 @@ export default function App() {
         axios.get(`${API}/planning/summary`),
         axios.get(`${API}/planning/metrics`),
         axios.get(`${API}/assets/risk/top?limit=100`),
-        axios.get(`${API}/planning/plan?limit=1500`),
+        axios.get(`${API}/planning/plan?limit=100`),
         axios.get(`${API}/audit/events?limit=12`),
       ]);
 
@@ -323,82 +102,24 @@ export default function App() {
         throw new Error("Backend health check failed");
       }
 
-      const nextAssets = assetResponse.data.items || [];
-      const nextPlan = planResponse.data.items || [];
-
       setSystem(systemResponse.data);
       setSummary(summaryResponse.data);
       setMetrics(metricsResponse.data);
-      setAssets(nextAssets);
-      setPlan(nextPlan);
-
-      const plannerEvents = (
-        auditResponse.data.items || []
-      ).filter((event) =>
-        [
-          "PLANNING_APPROVED",
-          "PLANNING_MODIFIED",
-          "PLANNING_REJECTED",
-        ].includes(event.event_type)
-      );
-
-      setAudit(plannerEvents);
-
-      const initialAsset = nextAssets[0] || null;
-
-      const initialTask =
-        nextPlan.find(
-          (task) =>
-            initialAsset &&
-            task.asset_id === initialAsset.asset_id
-        ) ||
-        nextPlan[0] ||
-        null;
-
-      setSelectedTask((current) => {
-        if (!current) return initialTask;
-
-        return (
-          nextPlan.find(
-            (task) =>
-              task.task_id === current.task_id
-          ) ||
-          nextPlan.find(
-            (task) =>
-              initialAsset &&
-              task.asset_id === initialAsset.asset_id
-          ) ||
-          initialTask
-        );
-      });
+      setAssets(assetResponse.data.items || []);
+      setPlan(planResponse.data.items || []);
+      setAudit(auditResponse.data.items || []);
 
       setSelectedAsset((current) => {
-        if (!current) return initialAsset;
+        if (!current) return null;
 
         return (
-          nextAssets.find(
-            (asset) =>
-              asset.asset_id === current.asset_id
-          ) || initialAsset || current
+          (assetResponse.data.items || []).find(
+            (item) => item.asset_id === current.asset_id
+          ) || current
         );
       });
-
-      if (!selectedAsset && initialAsset?.asset_id) {
-        try {
-          const detail = await axios.get(
-            `${API}/assets/${encodeURIComponent(
-              initialAsset.asset_id
-            )}/risk`
-          );
-
-          setSelectedAsset(detail.data);
-        } catch {
-          // Watchlist remains usable without detail loading.
-        }
-      }
     } catch (err) {
       console.error(err);
-
       setError(
         err?.response?.data?.detail ||
         "Rail-Yojna backend is unavailable. Start FastAPI on port 8000."
@@ -422,58 +143,35 @@ export default function App() {
       );
 
       setSelectedAsset(response.data);
-
-      const relatedTask = plan
-        .filter(
-          (task) =>
-            task.asset_id === assetId
-        )
-        .sort(
-          (a, b) =>
-            Number(b.calibrated_risk || 0) -
-            Number(a.calibrated_risk || 0)
-        )[0];
-
-      if (relatedTask) {
-        setSelectedTask(relatedTask);
-      }
     } catch (err) {
       console.error(err);
-
       setError(`Unable to load ${assetId}.`);
-    }
-  }
-
-  function openTask(task) {
-    setSelectedTask(task);
-
-    if (task?.asset_id) {
-      openAsset(task.asset_id);
     }
   }
 
   async function decide(task, decision) {
     if (!task) return;
 
-    if (!decisionActor.trim()) {
-      setDecisionMessage(
-        "Reviewer name is required."
-      );
-      return;
-    }
+    const actor = window.prompt(
+      "Planner / reviewer name:",
+      "planner"
+    );
+
+    if (!actor) return;
+
+    const note =
+      window.prompt("Decision note:", "") ?? "";
 
     try {
       setDecisionBusy(true);
       setDecisionMessage("");
 
-      await axios.post(
-        `${API}/planning/tasks/${encodeURIComponent(
-          task.task_id
-        )}/decision`,
+      const response = await axios.post(
+        `${API}/planning/tasks/${encodeURIComponent(task.task_id)}/decision`,
         {
           decision,
-          actor: decisionActor.trim(),
-          note: decisionNote.trim(),
+          actor,
+          note,
         }
       );
 
@@ -481,9 +179,13 @@ export default function App() {
         `${decision.toUpperCase()} recorded for ${task.task_id}`
       );
 
-      setDecisionNote("");
-
       await loadDashboard(false);
+
+      if (response.data) {
+        setSelectedTask((current) =>
+          current ? { ...current } : current
+        );
+      }
     } catch (err) {
       setDecisionMessage(
         err?.response?.data?.detail ||
@@ -501,7 +203,7 @@ export default function App() {
       .filter((asset) => {
         if (!term) return true;
 
-        return String(asset.asset_id || "")
+        return String(asset.asset_id)
           .toLowerCase()
           .includes(term);
       })
@@ -511,12 +213,11 @@ export default function App() {
         const risk = Number(asset.risk || 0);
 
         if (riskFilter === "CRITICAL") return risk >= 0.5;
-        if (riskFilter === "HIGH")
-          return risk >= 0.2 && risk < 0.5;
-        if (riskFilter === "MEDIUM")
-          return risk >= 0.05 && risk < 0.2;
+        if (riskFilter === "HIGH") return risk >= 0.2 && risk < 0.5;
+        if (riskFilter === "MEDIUM") return risk >= 0.05 && risk < 0.2;
+        if (riskFilter === "LOW") return risk < 0.05;
 
-        return risk < 0.05;
+        return true;
       })
       .slice(0, 30);
   }, [assets, search, riskFilter]);
@@ -534,17 +235,25 @@ export default function App() {
           task.task_type,
           task.section_id,
           task.track_id,
-          task.priority,
         ]
           .filter(Boolean)
           .some((value) =>
-            String(value)
-              .toLowerCase()
-              .includes(term)
+            String(value).toLowerCase().includes(term)
           );
       })
       .slice(0, 25);
   }, [plan, search]);
+
+  const criticalCount = assets.filter(
+    (asset) => Number(asset.risk || 0) >= 0.5
+  ).length;
+
+  const highCount = assets.filter(
+    (asset) => {
+      const risk = Number(asset.risk || 0);
+      return risk >= 0.2 && risk < 0.5;
+    }
+  ).length;
 
   const selectedAssetTasks = selectedAsset
     ? plan
@@ -560,43 +269,13 @@ export default function App() {
         .slice(0, 5)
     : [];
 
-  const assetCriticality =
-    selectedAsset?.criticality ??
-    selectedAssetTasks[0]?.criticality ??
-    null;
-
-  const assetCondition =
-    selectedAsset?.condition_score ??
-    selectedAssetTasks[0]?.condition_score ??
-    null;
-
-  const assetRisk =
-    selectedAsset?.risk ??
-    selectedAssetTasks[0]?.calibrated_risk ??
-    0;
-
-  const criticalCount = assets.filter(
-    (asset) => Number(asset.risk || 0) >= 0.5
-  ).length;
-
-  const highCount = assets.filter(
-    (asset) => {
-      const risk = Number(asset.risk || 0);
-      return risk >= 0.2 && risk < 0.5;
-    }
-  ).length;
-
   if (loading) {
     return (
       <div className="boot-screen">
         <div className="boot-card">
-          <img
-            className="boot-logo"
-            src="/assets/rail-yojna-logo.png"
-            alt="रेल-योजना"
-          />
-          <p>Maintenance decision support</p>
-          <span>Connecting to live data…</span>
+          <div className="brand-mark">RY</div>
+          <h1>Rail-Yojna</h1>
+          <p>Loading live maintenance intelligence…</p>
         </div>
       </div>
     );
@@ -606,17 +285,22 @@ export default function App() {
     <div className="app">
       <header className="header">
         <div className="brand">
-          <img
-            className="brand-logo"
-            src="/assets/rail-yojna-logo.png"
-            alt="रेल-योजना"
-          />
+          <div className="brand-mark">RY</div>
+
+          <div>
+            <div className="brand-title">
+              Rail-Yojna
+            </div>
+            <div className="brand-subtitle">
+              Maintenance decision support
+            </div>
+          </div>
         </div>
 
         <div className="header-center">
-          <strong>Maintenance Operations</strong>
+          <strong>Operational Dashboard</strong>
           <span>
-            Risk, maintenance priority and human review
+            V3 failure risk · 30-day horizon · maintenance_plan_v2
           </span>
         </div>
 
@@ -629,7 +313,7 @@ export default function App() {
             }
           >
             <i />
-            {system ? "Live" : "Offline"}
+            {system ? "Backend online" : "Backend unavailable"}
           </span>
 
           <button
@@ -642,18 +326,16 @@ export default function App() {
 
           <button
             className="button primary"
-            onClick={() =>
-              setPredictionOpen(true)
-            }
+            onClick={() => setPredictionOpen(true)}
           >
-            New risk check
+            Live prediction
           </button>
         </div>
       </header>
 
       {error && (
         <div className="error-banner">
-          <strong>Connection issue</strong>
+          <strong>Backend error</strong>
           <span>{error}</span>
         </div>
       )}
@@ -667,8 +349,7 @@ export default function App() {
                 ? summary.candidate_tasks.toLocaleString()
                 : "—"
             }
-            meta="Available for planning"
-            tone="blue"
+            meta="Current planning dataset"
           />
 
           <Metric
@@ -683,7 +364,6 @@ export default function App() {
                 ? `${summary.deferred_tasks.toLocaleString()} deferred`
                 : "—"
             }
-            tone="green"
           />
 
           <Metric
@@ -693,8 +373,7 @@ export default function App() {
                 ? summary.selected_hours.toFixed(1)
                 : "—"
             }
-            meta="Estimated workload"
-            tone="orange"
+            meta="Estimated maintenance workload"
           />
 
           <Metric
@@ -705,7 +384,6 @@ export default function App() {
                 : "—"
             }
             meta="Selected maintenance risk"
-            tone="red"
           />
 
           <Metric
@@ -716,18 +394,16 @@ export default function App() {
                 : highCount
             }
             meta={`${criticalCount} critical assets`}
-            tone="orange"
           />
 
           <Metric
-            label="Block required"
+            label="Block-required"
             value={
               metrics
                 ? metrics.block_required_tasks
                 : "—"
             }
             meta="Selected tasks"
-            tone="green"
           />
         </section>
 
@@ -769,21 +445,13 @@ export default function App() {
               <div>
                 <h3>Risk watchlist</h3>
                 <p>
-                  Highest-risk assets from the live service.
+                  Highest-risk assets returned by the live API.
                 </p>
               </div>
 
-              <button
-                className="panel-count clickable"
-                onClick={() =>
-                  setBrowse({
-                    type: "assets",
-                  })
-                }
-                title="Browse risk assets"
-              >
-                {assets.length}
-              </button>
+              <span className="panel-count">
+                {filteredAssets.length}
+              </span>
             </div>
 
             <div className="table-wrap">
@@ -798,7 +466,7 @@ export default function App() {
                       <th>Asset</th>
                       <th>Risk</th>
                       <th>Condition</th>
-                      <th>Criticality</th>
+                      <th>Priority</th>
                     </tr>
                   </thead>
 
@@ -817,17 +485,11 @@ export default function App() {
                         }
                       >
                         <td>
-                          <strong>
-                            {asset.asset_id}
-                          </strong>
+                          <strong>{asset.asset_id}</strong>
                         </td>
-
                         <td>
-                          <RiskChip
-                            value={asset.risk}
-                          />
+                          <RiskChip value={asset.risk} />
                         </td>
-
                         <td>
                           {asset.condition_score != null
                             ? Number(
@@ -835,13 +497,8 @@ export default function App() {
                               ).toFixed(1)
                             : "—"}
                         </td>
-
                         <td>
-                          {asset.criticality != null
-                            ? Number(
-                                asset.criticality
-                              ).toFixed(2)
-                            : "—"}
+                          {asset.priority || "—"}
                         </td>
                       </tr>
                     ))}
@@ -856,23 +513,13 @@ export default function App() {
               <div>
                 <h3>Maintenance queue</h3>
                 <p>
-                  Browse selected maintenance recommendations.
+                  Selected tasks from maintenance_plan_v2.
                 </p>
               </div>
 
-              <button
-                className="panel-count clickable"
-                onClick={() =>
-                  setBrowse({
-                    type: "tasks",
-                  })
-                }
-                title="Browse maintenance tasks"
-              >
-                {summary
-                  ? summary.selected_tasks
-                  : plan.length}
-              </button>
+              <span className="panel-count">
+                {filteredPlan.length}
+              </span>
             </div>
 
             <div className="table-wrap">
@@ -897,33 +544,24 @@ export default function App() {
                       <tr
                         key={task.task_id}
                         className={
-                          selectedTask?.task_id ===
-                          task.task_id
+                          selectedTask?.task_id === task.task_id
                             ? "selected"
                             : ""
                         }
                         onClick={() =>
-                          openTask(task)
+                          setSelectedTask(task)
                         }
                       >
                         <td>
-                          <strong>
-                            {task.task_id}
-                          </strong>
+                          <strong>{task.task_id}</strong>
                         </td>
-
                         <td>{task.asset_id}</td>
-
                         <td>
                           <RiskChip
-                            value={
-                              task.calibrated_risk
-                            }
+                            value={task.calibrated_risk}
                           />
                         </td>
-
                         <td>{task.priority}</td>
-
                         <td>
                           {task.block_required
                             ? "Required"
@@ -944,14 +582,15 @@ export default function App() {
               <div>
                 <h3>Selected asset</h3>
                 <p>
-                  Live risk and maintenance context.
+                  Live asset risk and the maintenance context
+                  available from the backend.
                 </p>
               </div>
             </div>
 
             {!selectedAsset ? (
               <Empty>
-                Select an asset from the watchlist.
+                Select an asset from the risk watchlist.
               </Empty>
             ) : (
               <div className="asset-detail">
@@ -960,24 +599,21 @@ export default function App() {
                     <div className="asset-id">
                       {selectedAsset.asset_id}
                     </div>
-
                     <div className="asset-meta">
-                      {selectedAsset.asset_type ||
-                        selectedAsset.asset_name ||
-                        "Railway asset"}
+                      {selectedAsset.asset_type || "Railway asset"}
                     </div>
                   </div>
 
-                  <RiskChip value={assetRisk} />
+                  <RiskChip value={selectedAsset.risk} />
                 </div>
 
                 <div className="detail-grid">
                   <div>
                     <span>Condition</span>
                     <strong>
-                      {assetCondition != null
+                      {selectedAsset.condition_score != null
                         ? Number(
-                            assetCondition
+                            selectedAsset.condition_score
                           ).toFixed(1)
                         : "—"}
                     </strong>
@@ -986,9 +622,9 @@ export default function App() {
                   <div>
                     <span>Criticality</span>
                     <strong>
-                      {assetCriticality != null
+                      {selectedAsset.criticality != null
                         ? Number(
-                            assetCriticality
+                            selectedAsset.criticality
                           ).toFixed(2)
                         : "—"}
                     </strong>
@@ -997,45 +633,41 @@ export default function App() {
                   <div>
                     <span>Risk probability</span>
                     <strong>
-                      {riskPercent(assetRisk)}
+                      {riskPercent(selectedAsset.risk)}
                     </strong>
                   </div>
 
                   <div>
-                    <span>Priority</span>
+                    <span>Data mode</span>
                     <strong>
-                      {selectedAssetTasks[0]?.priority ||
-                        "—"}
+                      {selectedAsset.data_mode || "synthetic"}
                     </strong>
                   </div>
                 </div>
 
-                <div className="asset-task-strip">
-                  <div>
-                    <span>Recommended task</span>
-                    <strong>
-                      {selectedAssetTasks[0]?.task_id ||
-                        "No selected task"}
-                    </strong>
+                <div className="asset-tasks">
+                  <div className="mini-title">
+                    Related maintenance tasks
                   </div>
 
-                  <div>
-                    <span>Work type</span>
-                    <strong>
-                      {selectedAssetTasks[0]?.task_type ||
-                        "—"}
-                    </strong>
-                  </div>
-
-                  <div>
-                    <span>Block</span>
-                    <strong>
-                      {selectedAssetTasks[0]
-                        ?.block_required
-                        ? "Required"
-                        : "No"}
-                    </strong>
-                  </div>
+                  {selectedAssetTasks.length === 0 ? (
+                    <span className="muted">
+                      No selected task found for this asset.
+                    </span>
+                  ) : (
+                    <div className="task-pills">
+                      {selectedAssetTasks.map((task) => (
+                        <button
+                          key={task.task_id}
+                          onClick={() =>
+                            setSelectedTask(task)
+                          }
+                        >
+                          {task.task_id}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -1046,33 +678,27 @@ export default function App() {
               <div>
                 <h3>Planner decision</h3>
                 <p>
-                  Review the selected recommendation.
+                  Human approval is mandatory.
                 </p>
               </div>
             </div>
 
             {!selectedTask ? (
               <Empty>
-                Select a maintenance task.
+                Select a maintenance task to review.
               </Empty>
             ) : (
               <div className="decision-detail">
                 <div className="decision-title">
                   <div>
-                    <strong>
-                      {selectedTask.task_id}
-                    </strong>
-
+                    <strong>{selectedTask.task_id}</strong>
                     <span>
-                      {selectedTask.task_type ||
-                        "Maintenance task"}
+                      {selectedTask.task_type}
                     </span>
                   </div>
 
                   <RiskChip
-                    value={
-                      selectedTask.calibrated_risk
-                    }
+                    value={selectedTask.calibrated_risk}
                   />
                 </div>
 
@@ -1094,10 +720,7 @@ export default function App() {
                   <div>
                     <span>Duration</span>
                     <strong>
-                      {
-                        selectedTask.estimated_duration_minutes
-                      }{" "}
-                      min
+                      {selectedTask.estimated_duration_minutes} min
                     </strong>
                   </div>
 
@@ -1113,11 +736,9 @@ export default function App() {
 
                 <div className="explanation">
                   <span>Why this recommendation exists</span>
-
                   <strong>
-                    {selectedTask.explanation
-                      ?.primary_reason ||
-                      "Based on current risk, asset condition and maintenance priority."}
+                    {selectedTask.explanation?.primary_reason ||
+                      "Deterministic planner explanation"}
                   </strong>
 
                   {Array.isArray(
@@ -1135,46 +756,12 @@ export default function App() {
                   )}
                 </div>
 
-                <div className="decision-form">
-                  <label>
-                    <span>Reviewer</span>
-
-                    <input
-                      value={decisionActor}
-                      onChange={(event) =>
-                        setDecisionActor(
-                          event.target.value
-                        )
-                      }
-                      placeholder="Planner name"
-                    />
-                  </label>
-
-                  <label>
-                    <span>Decision note</span>
-
-                    <textarea
-                      value={decisionNote}
-                      onChange={(event) =>
-                        setDecisionNote(
-                          event.target.value
-                        )
-                      }
-                      placeholder="Reason for this decision"
-                      rows={2}
-                    />
-                  </label>
-                </div>
-
                 <div className="decision-actions">
                   <button
                     className="approve"
                     disabled={decisionBusy}
                     onClick={() =>
-                      decide(
-                        selectedTask,
-                        "approve"
-                      )
+                      decide(selectedTask, "approve")
                     }
                   >
                     Approve
@@ -1183,10 +770,7 @@ export default function App() {
                   <button
                     disabled={decisionBusy}
                     onClick={() =>
-                      decide(
-                        selectedTask,
-                        "modify"
-                      )
+                      decide(selectedTask, "modify")
                     }
                   >
                     Modify
@@ -1196,10 +780,7 @@ export default function App() {
                     className="reject"
                     disabled={decisionBusy}
                     onClick={() =>
-                      decide(
-                        selectedTask,
-                        "reject"
-                      )
+                      decide(selectedTask, "reject")
                     }
                   >
                     Reject
@@ -1213,8 +794,8 @@ export default function App() {
                 )}
 
                 <div className="safety-note">
-                  Human review is required before any
-                  maintenance decision is treated as approved.
+                  Decision support only. No signalling, routing,
+                  dispatch, or train-movement authority is issued.
                 </div>
               </div>
             )}
@@ -1226,10 +807,7 @@ export default function App() {
             <span className="section-kicker">
               AUDIT
             </span>
-
-            <strong>
-              Recent planner decisions
-            </strong>
+            <strong>Recent planner decisions</strong>
           </div>
 
           <div className="audit-items">
@@ -1248,12 +826,9 @@ export default function App() {
                       ?.replaceAll("_", " ")
                       .toLowerCase()}
                   </strong>
-
                   <span>
-                    {event.recommendation_id ||
-                      "system"}
+                    {event.recommendation_id || "system"}
                   </span>
-
                   <small>
                     {event.actor || "system"}
                   </small>
@@ -1263,41 +838,24 @@ export default function App() {
           </div>
 
           <div className="footer-status">
-            <span>30-day risk window</span>
-            <span>Human review required</span>
-            <span>Live backend</span>
+            <span>
+              Model{" "}
+              {system?.model_version ||
+                "failure_30d_v3_logistic"}
+            </span>
+
+            <span>
+              Planner{" "}
+              {system?.planner_version ||
+                "maintenance_plan_v2"}
+            </span>
+
+            <span>
+              Human review required
+            </span>
           </div>
         </section>
       </main>
-
-      {browse?.type === "tasks" && (
-        <ListModal
-          title="Maintenance recommendations"
-          subtitle="Browse the complete selected maintenance queue."
-          items={plan}
-          total={
-            summary?.selected_tasks ??
-            plan.length
-          }
-          kind="tasks"
-          onClose={() => setBrowse(null)}
-          onSelect={openTask}
-        />
-      )}
-
-      {browse?.type === "assets" && (
-        <ListModal
-          title="Risk watchlist"
-          subtitle="Browse the available high-risk asset ranking."
-          items={assets}
-          total={assets.length}
-          kind="assets"
-          onClose={() => setBrowse(null)}
-          onSelect={(asset) =>
-            openAsset(asset.asset_id)
-          }
-        />
-      )}
 
       {predictionOpen && (
         <div
