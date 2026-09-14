@@ -22,48 +22,8 @@ def parse_time(s: pd.Series) -> pd.Series:
     )
 
 
-def read_table(
-    source,
-    columns: list[str] | None = None,
-) -> pd.DataFrame:
-    """
-    Read a table from Parquet when available, otherwise CSV.
-    """
-
-    source = Path(source)
-
-    if source.suffix == ".parquet":
-        parquet = source
-        csv = source.with_suffix(".csv")
-    else:
-        parquet = DATASET / f"{source.name}.parquet"
-        csv = DATASET / f"{source.name}.csv"
-
-    if parquet.exists():
-        if columns is None:
-            return pd.read_parquet(parquet)
-
-        return pd.read_parquet(
-            parquet,
-            columns=columns,
-        )
-
-    if csv.exists():
-        if columns is None:
-            return pd.read_csv(csv)
-
-        return pd.read_csv(
-            csv,
-            usecols=columns,
-        )
-
-    raise FileNotFoundError(
-        f"Neither {parquet} nor {csv} exists."
-    )
-
-
 def load_observations() -> pd.DataFrame:
-    df = read_table(DATASET / "asset_condition_history.parquet")
+    df = pd.read_parquet(DATASET / "asset_condition_history.parquet")
 
     df["prediction_timestamp"] = parse_time(df["timestamp"])
 
@@ -75,7 +35,7 @@ def load_observations() -> pd.DataFrame:
 
 
 def load_asset_info() -> pd.DataFrame:
-    df = read_table(
+    df = pd.read_parquet(
         DATASET / "assets.parquet",
         columns=[
             "asset_id",
@@ -97,9 +57,9 @@ def load_historical_table(
     columns: list[str],
     time_column: str,
 ) -> pd.DataFrame:
-    df = read_table(
-        table,
-        columns,
+    df = pd.read_parquet(
+        DATASET / f"{table}.parquet",
+        columns=columns,
     )
 
     df[time_column] = parse_time(df[time_column])
@@ -415,9 +375,9 @@ def add_failure_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_target(df: pd.DataFrame) -> pd.DataFrame:
-    incidents = read_table(
-        "incidents",
-        ["asset_id", "timestamp"],
+    incidents = pd.read_parquet(
+        DATASET / "incidents.parquet",
+        columns=["asset_id", "timestamp"],
     )
 
     incidents["failure_timestamp"] = parse_time(

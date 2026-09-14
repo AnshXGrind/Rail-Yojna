@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import LivePrediction from "./components/LivePrediction";
-import PlanningDashboard from "./components/PlanningDashboard";
 
 const API = "http://127.0.0.1:8000/api/v1";
 
@@ -1033,8 +1032,7 @@ function App() {
               {view === "predict" && <LivePrediction onAssetOpen={openAsset} />}
             </>
           )}
-          <PlanningDashboard />
-      </main>
+        </main>
       </div>
     </div>
   );

@@ -13,27 +13,95 @@ const initialForm = {
   measurement_confidence: "0.8431",
 };
 
-function RiskBadge({ risk }) {
-  const percent = risk * 100;
+function clampProbability(value) {
+  const probability = Number(value);
 
-  let label = "Low";
-  let cls = "low";
-
-  if (percent >= 50) {
-    label = "Critical";
-    cls = "critical";
-  } else if (percent >= 20) {
-    label = "High";
-    cls = "high";
-  } else if (percent >= 5) {
-    label = "Moderate";
-    cls = "moderate";
+  if (!Number.isFinite(probability)) {
+    return 0;
   }
 
+  return Math.min(1, Math.max(0, probability));
+}
+
+function formatRiskPercent(value) {
+  const probability = clampProbability(value);
+  const percent = probability * 100;
+
+  if (percent === 0) return "0%";
+  if (percent < 0.0001) return `${percent.toPrecision(6)}%`;
+  if (percent < 0.01) return `${percent.toFixed(6)}%`;
+  if (percent < 1) return `${percent.toFixed(4)}%`;
+  if (percent < 10) return `${percent.toFixed(3)}%`;
+
+  return `${percent.toFixed(2)}%`;
+}
+
+function getRiskBand(value) {
+  const probability = clampProbability(value);
+
+  if (probability >= 0.50) {
+    return {
+      label: "Critical",
+      cls: "critical",
+    };
+  }
+
+  if (probability >= 0.20) {
+    return {
+      label: "High",
+      cls: "high",
+    };
+  }
+
+  if (probability >= 0.05) {
+    return {
+      label: "Moderate",
+      cls: "moderate",
+    };
+  }
+
+  return {
+    label: "Low",
+    cls: "low",
+  };
+}
+
+function RiskBadge({ risk }) {
+  const band = getRiskBand(risk);
+
   return (
-    <span className={`risk-badge ${cls}`}>
-      {percent.toFixed(2)}% · {label}
+    <span className={`risk-badge ${band.cls}`}>
+      {formatRiskPercent(risk)} · {band.label}
     </span>
+  );
+}
+
+function RiskMeter({ risk }) {
+  const probability = clampProbability(risk);
+  const percent = probability * 100;
+  const band = getRiskBand(probability);
+
+  return (
+    <div
+      className="live-risk-meter"
+      aria-label={`30-day failure probability ${formatRiskPercent(probability)}`}
+    >
+      <div className="live-risk-meter-track">
+        <div
+          className="live-risk-meter-marker"
+          style={{ left: `${percent}%` }}
+          data-risk={band.cls}
+        />
+      </div>
+
+      <div className="live-risk-meter-scale">
+        <span>0%</span>
+        <span>5%</span>
+        <span>20%</span>
+        <span>50%</span>
+        <span>100%</span>
+      </div>
+    </div>
   );
 }
 
@@ -280,13 +348,12 @@ export default function LivePrediction({ onAssetOpen }) {
                 <span>30-day failure probability</span>
 
                 <strong>
-                  {(result.risk_probability * 100).toFixed(
-                    2
-                  )}
-                  %
+                  {formatRiskPercent(result.risk_probability)}
                 </strong>
 
                 <RiskBadge risk={result.risk_probability} />
+
+                <RiskMeter risk={result.risk_probability} />
               </div>
 
               <div className="result-grid">

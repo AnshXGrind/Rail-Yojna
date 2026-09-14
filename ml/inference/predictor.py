@@ -13,12 +13,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 MODEL_PATH = (
     ROOT /
-    "ml/models/failure_30d_v2_logistic.joblib"
+    "ml/models/failure_30d_v3_logistic.joblib"
 )
 
 CALIBRATOR_PATH = (
     ROOT /
-    "ml/models/failure_30d_probability_calibrator.joblib"
+    "ml/models/failure_30d_v3_probability_calibrator.joblib"
 )
 
 
@@ -36,19 +36,6 @@ def load_artifacts():
         calibrator,
         feature_builder,
     )
-
-
-def risk_level(probability: float) -> str:
-    if probability >= 0.50:
-        return "critical"
-
-    if probability >= 0.20:
-        return "high"
-
-    if probability >= 0.05:
-        return "moderate"
-
-    return "low"
 
 
 def predict(
@@ -82,7 +69,7 @@ def predict(
     if list(features.columns) != list(expected_features):
         raise RuntimeError(
             "Inference feature order does not match the "
-            "trained V2 model."
+            "trained V3 model."
         )
 
     raw_probability = float(
@@ -112,11 +99,8 @@ def predict(
         "timestamp": str(timestamp),
         "raw_probability": raw_probability,
         "risk_probability": calibrated_probability,
-        "risk_level": risk_level(
-            calibrated_probability
-        ),
         "prediction_horizon_days": 30,
-        "model_version": "failure_30d_v2_logistic",
+        "model_version": "failure_30d_v3_logistic",
         "calibration": "platt_sigmoid",
         "data_mode": "synthetic",
     }

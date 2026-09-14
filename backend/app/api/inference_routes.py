@@ -3,7 +3,11 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException
 
 from backend.app.audit.audit_service import record_event
-from backend.app.core.rules_engine import classify_risk, evaluate_risk
+from backend.app.core.rules_engine import (
+    classify_risk,
+    evaluate_risk,
+    requires_human_review,
+)
 from backend.app.schemas.inference import RiskPredictionRequest
 from ml.inference.predictor import predict
 
@@ -29,11 +33,17 @@ def predict_risk(payload: RiskPredictionRequest):
 
         risk_probability = float(result["risk_probability"])
 
+        # Single operational source of truth for risk classification.
         risk_level = classify_risk(risk_probability)
         rules_triggered = evaluate_risk(risk_probability)
+        review_required = requires_human_review(
+            risk_probability,
+            risk_level,
+        )
 
         result["risk_level"] = risk_level
         result["rules_triggered"] = rules_triggered
+        result["review_required"] = review_required
         result["human_approval_required"] = True
         result["decision_mode"] = "decision_support"
 

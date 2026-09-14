@@ -1,0 +1,72 @@
+{
+  "model_name": "failure_30d_v3_logistic",
+  "model_type": "logistic_regression",
+  "target": "failure_within_30_days",
+  "horizon_days": 30,
+  "feature_count": 23,
+  "features": [
+    "condition_score",
+    "degradation_rate",
+    "measurement_value",
+    "inspection_quality",
+    "measurement_confidence",
+    "previous_condition_score",
+    "condition_change",
+    "days_since_previous_measurement",
+    "historical_mean_condition",
+    "historical_min_condition",
+    "historical_mean_degradation",
+    "historical_observation_count",
+    "design_life_years",
+    "criticality_score",
+    "asset_age_days",
+    "defect_days_since_last",
+    "defect_count_before",
+    "inspection_days_since_last",
+    "inspection_count_before",
+    "maintenance_days_since_last",
+    "maintenance_count_before",
+    "incident_days_since_last",
+    "incident_count_before"
+  ],
+  "dataset": "data/processed/failure_30d_dataset_v3.parquet",
+  "model_artifact": "ml/models/failure_30d_v3_logistic.joblib",
+  "calibrator_artifact": "ml/models/failure_30d_v3_probability_calibrator.joblib",
+  "training_method": {
+    "imputer": "median",
+    "scaler": "standard",
+    "classifier": "LogisticRegression",
+    "class_weight": "balanced",
+    "random_state": 42,
+    "max_iter": 1000
+  },
+  "test_metrics": {
+    "raw_pr_auc": 0.14013833352455052,
+    "calibrated_pr_auc": 0.1401383335245505,
+    "raw_roc_auc": 0.9621395039219094,
+    "calibrated_roc_auc": 0.9621395039219094,
+    "raw_brier": 0.09965458958989572,
+    "calibrated_brier": 0.009367812051203194
+  },
+  "ranking_validation": {
+    "calibrator_coefficient": 0.6779367473364035,
+    "monotonic_violations": 0,
+    "raw_and_calibrated_monotonic": true,
+    "top_k_agreement": {
+      "0.005": 1.0,
+      "0.01": 1.0,
+      "0.02": 1.0,
+      "0.05": 1.0,
+      "0.1": 1.0
+    }
+  },
+  "validation": {
+    "leakage_audit": "PASS",
+    "temporal_backtest": "PASS_WITH_LOW_EVENT_MONTHS",
+    "expanding_backtest": "PASS_WITH_LOW_EVENT_MONTHS",
+    "causal_defect_check": "PASS"
+  },
+  "interpretation_note": "The synthetic generator explicitly creates later failure events from defects marked failure_occurred=True. Recent defect detection is therefore a strong intended leading indicator in this synthetic benchmark.",
+  "promotion_status": "FROZEN_RESEARCH_MODEL",
+  "production_status": "NOT_FOR_AUTONOMOUS_RAILWAY_SAFETY_CONTROL"
+}

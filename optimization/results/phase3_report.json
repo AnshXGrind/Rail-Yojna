@@ -1,0 +1,85 @@
+{
+  "phase": "3",
+  "status": "PASS",
+  "stages": {
+    "v3_model": "PASS",
+    "maintenance_tasks": {
+      "status": "PASS",
+      "rows": 51316,
+      "columns": [
+        "task_id",
+        "asset_id",
+        "section_id",
+        "track_id",
+        "task_type",
+        "priority",
+        "criticality",
+        "planned_date",
+        "earliest_start",
+        "latest_finish",
+        "estimated_duration_minutes",
+        "block_required",
+        "task_status"
+      ]
+    },
+    "v3_risk_state": {
+      "status": "PASS",
+      "assets": 30000
+    },
+    "candidate_generation": {
+      "status": "PASS",
+      "total_rows": 51316,
+      "eligible": 1421,
+      "invalid": 0,
+      "deferred": 49895
+    },
+    "constraint_coverage": {
+      "resource_constraints": "AVAILABLE_FOR_MODELING",
+      "resource_capacity_constraints": "AVAILABLE_FOR_MODELING",
+      "block_constraints": "AVAILABLE_FOR_MODELING",
+      "train_conflict_constraints": "AVAILABLE_FOR_MODELING",
+      "precedence_constraints": "UNAVAILABLE",
+      "daily_capacity": "ENFORCED"
+    },
+    "optimizer": {
+      "status": "PASS",
+      "candidate_rows": 51316,
+      "selected_tasks": 1314,
+      "selected_minutes": 278172,
+      "risk_mass": 124.00241311995413,
+      "daily_capacity_minutes": 10000
+    },
+    "baseline_comparison": {
+      "status": "PASS",
+      "rows": {
+        "chronological": {
+          "tasks": 1244.0,
+          "minutes": 278098.0,
+          "risk_mass": 114.5185061155058,
+          "mean_risk": 0.09205667694172492,
+          "high_risk_tasks": 55.0,
+          "p1_tasks": 907.0
+        },
+        "risk_only": {
+          "tasks": 1242.0,
+          "minutes": 277470.0,
+          "risk_mass": 123.4909450971039,
+          "mean_risk": 0.09942910233261183,
+          "high_risk_tasks": 64.0,
+          "p1_tasks": 1016.0
+        },
+        "rail_yojna_v2": {
+          "tasks": 1314.0,
+          "minutes": 278172.0,
+          "risk_mass": 124.00241311995413,
+          "mean_risk": 0.09437017741244606,
+          "high_risk_tasks": 62.0,
+          "p1_tasks": 983.0
+        }
+      }
+    },
+    "final_validation": "PASS"
+  },
+  "warnings": [],
+  "errors": []
+}

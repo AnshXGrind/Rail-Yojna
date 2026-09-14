@@ -10,35 +10,6 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = ROOT / "data/raw/rail_yojna_data"
 
 
-def _read_table(
-    name: str,
-    columns: list[str] | None = None,
-) -> pd.DataFrame:
-    """
-    Read a raw railway table using Parquet when available,
-    otherwise fall back to the canonical CSV dataset.
-    """
-    parquet_path = DATA_ROOT / f"{name}.parquet"
-    csv_path = DATA_ROOT / f"{name}.csv"
-
-    if parquet_path.exists():
-        return pd.read_parquet(
-            parquet_path,
-            columns=columns,
-        )
-
-    if csv_path.exists():
-        return pd.read_csv(
-            csv_path,
-            usecols=columns,
-        )
-
-    raise FileNotFoundError(
-        f"Neither {parquet_path} nor {csv_path} exists."
-    )
-
-
-
 FEATURES = [
     "condition_score",
     "degradation_rate",
@@ -92,7 +63,7 @@ def _parse_utc(series: pd.Series) -> pd.Series:
 
 class FeatureBuilder:
     """
-    Builds the exact 23-feature contract expected by the V3 model.
+    Builds the exact 23-feature contract expected by the V2 model.
 
     All internal timestamps are normalized to UTC-aware pandas timestamps.
     """
@@ -102,8 +73,8 @@ class FeatureBuilder:
         # Asset master data
         # ------------------------------------------------------------
 
-        self.assets = _read_table(
-            "assets",
+        self.assets = pd.read_parquet(
+            DATA_ROOT / "assets.parquet",
             columns=[
                 "asset_id",
                 "installation_date",
@@ -122,8 +93,8 @@ class FeatureBuilder:
         # Condition history
         # ------------------------------------------------------------
 
-        self.condition = _read_table(
-            "asset_condition_history",
+        self.condition = pd.read_parquet(
+            DATA_ROOT / "asset_condition_history.parquet",
             columns=[
                 "asset_id",
                 "timestamp",
@@ -153,8 +124,8 @@ class FeatureBuilder:
         # Defect history
         # ------------------------------------------------------------
 
-        self.defects = _read_table(
-            "defects",
+        self.defects = pd.read_parquet(
+            DATA_ROOT / "defects.parquet",
             columns=[
                 "asset_id",
                 "detected_timestamp",
@@ -173,8 +144,8 @@ class FeatureBuilder:
         # Inspection history
         # ------------------------------------------------------------
 
-        self.inspections = _read_table(
-            "inspections",
+        self.inspections = pd.read_parquet(
+            DATA_ROOT / "inspections.parquet",
             columns=[
                 "asset_id",
                 "inspection_date",
@@ -193,8 +164,8 @@ class FeatureBuilder:
         # Maintenance history
         # ------------------------------------------------------------
 
-        self.maintenance = _read_table(
-            "maintenance_tasks",
+        self.maintenance = pd.read_parquet(
+            DATA_ROOT / "maintenance_tasks.parquet",
             columns=[
                 "asset_id",
                 "planned_date",
@@ -213,8 +184,8 @@ class FeatureBuilder:
         # Incident history
         # ------------------------------------------------------------
 
-        self.incidents = _read_table(
-            "incidents",
+        self.incidents = pd.read_parquet(
+            DATA_ROOT / "incidents.parquet",
             columns=[
                 "asset_id",
                 "timestamp",
@@ -361,7 +332,6 @@ class FeatureBuilder:
             asset_id,
             "inspection_date",
             timestamp,
-            inclusive=True,
         )
 
         inspection_count_before = len(inspections)
@@ -383,7 +353,6 @@ class FeatureBuilder:
             asset_id,
             "planned_date",
             timestamp,
-            inclusive=True,
         )
 
         maintenance_count_before = len(maintenance)
@@ -405,7 +374,6 @@ class FeatureBuilder:
             asset_id,
             "timestamp",
             timestamp,
-            inclusive=True,
         )
 
         incident_count_before = len(incidents)
