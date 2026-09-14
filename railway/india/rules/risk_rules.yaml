@@ -1,0 +1,47 @@
+version: "1.0"
+
+risk_levels:
+  - id: low
+    min: 0.0
+    max: 0.05
+
+  - id: medium
+    min: 0.05
+    max: 0.20
+
+  - id: high
+    min: 0.20
+    max: 0.50
+
+  - id: critical
+    min: 0.50
+    max: 1.00
+
+decision_rules:
+
+  - id: RISK-001
+    description: "Critical predicted failure risk requires planner review."
+    when:
+      field: risk_probability
+      operator: ">="
+      value: 0.50
+    action: review_required
+    automatic_action: false
+
+  - id: RISK-002
+    description: "High predicted failure risk requires maintenance prioritisation review."
+    when:
+      field: risk_probability
+      operator: ">="
+      value: 0.20
+    action: prioritise_review
+    automatic_action: false
+
+  - id: SAFETY-001
+    description: "ML output must never directly authorize railway operations."
+    when:
+      field: model_output
+      operator: "exists"
+      value: true
+    action: human_approval_required
+    automatic_action: false

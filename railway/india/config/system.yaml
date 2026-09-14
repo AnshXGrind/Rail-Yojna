@@ -1,0 +1,30 @@
+project:
+  name: Rail-Yojna
+  version: "3.0"
+  environment: synthetic
+
+scope:
+  geography: India
+  purpose: maintenance_decision_support
+
+safety:
+  autonomous_train_control: false
+  autonomous_signalling_control: false
+  autonomous_block_authority: false
+  human_approval_required: true
+
+data:
+  timezone: UTC
+  missing_value_policy: explicit_null
+  preserve_raw_data: true
+
+ml:
+  failure_model: failure_30d_v2_logistic
+  calibration: platt_sigmoid
+  horizon_days: 30
+
+planning:
+  optimizer_mode: research
+  real_operational_capacity_required: true
+  future_timetable_required: true
+  future_resource_availability_required: true

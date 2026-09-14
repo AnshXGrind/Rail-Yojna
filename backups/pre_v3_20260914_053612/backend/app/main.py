@@ -35,7 +35,3 @@ def root():
         "service": "backend",
         "version": "0.1.0",
     }
-
-from backend.app.api.system_routes import router as system_router
-
-app.include_router(system_router)
