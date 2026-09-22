@@ -1,0 +1,6 @@
+# Complete Rail-Yojna development/research environment
+
+-r requirements.txt
+-r requirements-ml.txt
+-r requirements-geo.txt
+-r requirements-dev.txt
