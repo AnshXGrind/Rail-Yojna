@@ -1,3 +1,4 @@
+import re
 from backend.app.services.window_optimizer import optimize_windows
 from fastapi import APIRouter, HTTPException, Query
 from backend.app.audit.audit_service import list_events, record_event

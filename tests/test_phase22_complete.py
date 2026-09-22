@@ -9,10 +9,8 @@ client = TestClient(app)
 
 
 def test_optimized_windows_route_is_registered():
-    paths = {
-        getattr(route, "path", "")
-        for route in app.routes
-    }
+    schema = app.openapi()
+    paths = schema.get("paths", {})
 
     assert "/api/v1/planning/blocks/{block_id}/optimized-windows" in paths
 
