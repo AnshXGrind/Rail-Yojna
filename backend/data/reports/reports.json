@@ -26,5 +26,19 @@
     "closed_at": null,
     "last_actor": "RAMKISHAN",
     "last_note": null
+  },
+  {
+    "report_id": "REP-A11EA3B8DF",
+    "asset_id": "AST00000009",
+    "reporter": "SDHB",
+    "problem_type": "Sleeper",
+    "severity": "Medium",
+    "description": "ASv JVAGV JDAC SDYSC SDGYSD CYGCS",
+    "status": "NEW",
+    "created_at": "2026-09-22T08:13:20.024072Z",
+    "updated_at": "2026-09-22T08:13:20.024072Z",
+    "closed_at": null,
+    "last_actor": "SDHB",
+    "last_note": null
   }
 ]
