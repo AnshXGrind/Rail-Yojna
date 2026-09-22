@@ -1,3 +1,0 @@
-model,pr_auc,roc_auc
-Majority Baseline,0.010533333333333334,0.5
-Logistic Regression,0.0415277680380948,0.8451888016502377

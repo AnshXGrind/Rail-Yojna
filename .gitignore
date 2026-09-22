@@ -25,3 +25,9 @@ data/raw/backups/
 # Local phase backups
 .phase19_backup/
 .phase22_backup_*/
+
+# Submission/release cleanup
+/backups/
+/data/backups/
+*.pre_*
+.phase*_backup*/
