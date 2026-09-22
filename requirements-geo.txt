@@ -1,0 +1,7 @@
+# Rail-Yojna — optional geospatial/network research dependencies
+
+-r requirements.txt
+
+networkx==3.6.1
+shapely==2.1.2
+geopandas==1.1.4
