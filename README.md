@@ -1,763 +1,380 @@
-# Rail-Yojna
+# Rail-Yojna 🚆
 
-**AI-Assisted Railway Maintenance and Block-Planning Decision Support System**
+> **AI-assisted railway maintenance and block-planning decision support for explainable, constraint-aware planning.**
 
-Rail-Yojna is a research and engineering project focused on improving railway maintenance planning by combining railway infrastructure data, machine learning, optimization, simulation, and deterministic safety constraints.
-
-The system is designed to help railway planners answer questions such as:
-
-* Which assets or sections require maintenance attention?
-* Which maintenance activities should receive higher priority?
-* When is a suitable maintenance window available?
-* How will a proposed maintenance block affect train operations?
-* Which combination of maintenance tasks, resources, and time windows produces a better plan?
-* Does a proposed plan satisfy all defined safety and operational constraints?
-
-Rail-Yojna is designed as a **decision-support system**. It does not autonomously control railway signalling, train movement authority, or other safety-critical railway systems.
-
----
-
-## Project Status
-
-**Current stage:** Infrastructure and dataset development
-
-The project is currently being developed in stages:
-
-1. Project and software infrastructure
-2. Railway dataset generation and validation
-3. Data ingestion and quality analysis
-4. Feature engineering
-5. Machine-learning models
-6. Maintenance and risk prediction
-7. Block-planning optimization
-8. Simulation and scenario testing
-9. Safety validation
-10. Backend API
-11. Planner dashboard
-12. End-to-end integration and evaluation
-
-The large synthetic research dataset is being generated separately and will be integrated after its schema, relationships, temporal consistency, and data quality have been validated.
-
----
-
-## Core Idea
-
-Rail-Yojna combines several components instead of treating railway maintenance as only an ML problem.
+Rail-Yojna is an end-to-end research and engineering prototype for **railway asset risk assessment, maintenance planning, block planning, operational assessment, and human-reviewed decision support**.
 
 ```text
-                    RAIL-YOJNA
-                         |
-        +----------------+----------------+
-        |                                 |
-  Railway Data                      Railway Rules
-        |                                 |
-        +----------------+----------------+
-                         |
-                  Data Foundation
-                         |
-                 Risk / Prediction
-                         |
-                 Planning Engine
-                         |
-              Simulation / Validation
-                         |
-                Safety Validation
-                         |
-                 Recommendation
-                         |
-                 Human Planner
+Asset condition → Risk prediction → Maintenance task
+                         ↓
+                 Block candidate
+                         ↓
+          Train / safety / resource assessment
+                         ↓
+              Explainable recommendation
+                         ↓
+                   Human planner
+                  /      |      \
+             APPROVE   MODIFY   REJECT
+                         ↓
+                     Audit trail
 ```
 
-The system follows the principle:
+> **Safety boundary:** Rail-Yojna is a decision-support prototype. It does not autonomously control signalling, interlocking, train movement, route setting, dispatch, or block authority.
 
-> **AI proposes, deterministic constraints validate, and an authorized human makes the final planning decision.**
+## What is implemented
 
----
+| Area | Current capability |
+|---|---|
+| Railway data | Relational synthetic research dataset |
+| ML | 30-day asset failure-risk inference |
+| Calibration | Calibrated probability output |
+| Maintenance planning | Versioned maintenance-plan artifact |
+| Block planning | Same-track candidate block generation |
+| Operations | Train occupancy and maintenance-window assessment |
+| Safety | Deterministic safety-rule evaluation |
+| Resources | Resource, crew, machine, and material assessment where source data permits |
+| Recommendations | Explainable block recommendation service |
+| Decisions | Human approve / modify / reject workflow |
+| Audit | Prediction/decision event logging |
+| Backend | FastAPI |
+| Frontend | React planner-oriented Control Room |
+| Validation | Unit, integration, and end-to-end tests |
 
-# Objectives
+## Why this project
 
-The main objectives of Rail-Yojna are:
+Railway maintenance planning is not only a machine-learning problem. A useful planning workflow must combine asset condition, inspection and defect history, maintenance urgency, train occupancy, maintenance windows, task duration, resource availability, materials, deterministic safety constraints, operational conflicts, and planner decisions.
 
-### 1. Maintenance Prioritization
+Rail-Yojna therefore treats **ML as one layer in a larger engineering system**, rather than allowing a model probability to become an operational decision.
 
-Use historical asset condition, inspections, defects, failures, maintenance history, and related operational information to estimate maintenance priorities and risks.
-
-### 2. Maintenance Prediction
-
-Where sufficient historical data exists, develop models for problems such as:
-
-* asset failure risk
-* maintenance requirement
-* expected maintenance duration
-* block overrun probability
-* operational delay impact
-
-The exact prediction targets will be determined from the validated dataset rather than assumed in advance.
-
-### 3. Block Planning
-
-Determine suitable maintenance windows while considering:
-
-* railway topology
-* train movements
-* timetable constraints
-* maintenance duration
-* available resources
-* track occupancy
-* operational conflicts
-* safety constraints
-
-### 4. Scenario Simulation
-
-Allow planners to evaluate alternative scenarios before selecting a plan.
-
-For example:
+## System architecture
 
 ```text
-Scenario A
-Maintenance: 08:00-10:00
-Affected trains: 4
-
-Scenario B
-Maintenance: 11:00-13:00
-Affected trains: 1
-
-Scenario C
-Maintenance: 14:00-15:30
-Affected trains: 0
+                    Railway Data
+                         ↓
+              Validation / preprocessing
+                         ↓
+           ┌─────────────┴─────────────┐
+           ↓                           ↓
+      ML / Risk                  Planning Data
+           ↓                           ↓
+      Calibrated Risk          Maintenance Plan
+           └─────────────┬─────────────┘
+                         ↓
+                Block Candidate Gen.
+                         ↓
+            ┌────────────┼────────────┐
+            ↓            ↓            ↓
+         Trains        Safety      Resources
+            └────────────┼────────────┘
+                         ↓
+                 Unified Assessment
+                         ↓
+                  Recommendation
+                         ↓
+                    Human Planner
+                         ↓
+                      Audit
 ```
 
-The system can compare the resulting operational consequences and constraints.
+See [`docs/architecture/operational_core.md`](docs/architecture/operational_core.md) and the expanded documentation under [`docs/`](docs/).
 
-### 5. Explainable Decision Support
+## ML component
 
-A recommendation should provide reasons and relevant information rather than only returning a numerical score.
+The current production inference flow uses a versioned **30-day failure-risk** pipeline.
 
----
+- **Rows:** 600,000
+- **Positive events:** 3,358
+- **Positive rate:** ~0.56%
+- **Coverage:** 2022-01-01 → 2025-12-31
+- **Engineered features:** 23
+- **Model:** versioned logistic-regression pipeline
+- **Calibration:** versioned probability calibrator
 
-# Safety Philosophy
+### Evaluation artifacts
 
-Railway systems are safety-critical.
+| Metric | Result |
+|---|---:|
+| Raw PR-AUC | 0.1401 |
+| Raw ROC-AUC | 0.9621 |
+| Brier before calibration | 0.0997 |
+| Brier after calibration | 0.0094 |
 
-Rail-Yojna therefore separates **prediction and optimization** from **safety validation**.
+These are **synthetic research-data results**, not evidence of real-world railway model performance.
+
+### Model limitation
+
+The current synthetic positive class is strongly associated with newly detected defects. The model should therefore be interpreted as a synthetic leading-indicator model conditional on the available defect/condition signal, not as evidence of general real-world failure forecasting.
+
+## Planning and block candidates
+
+The current planning artifact contains:
+
+- **51,316** candidate task rows
+- **1,421** eligible candidates
+- **1,314** selected tasks
+- **107** eligible tasks deferred by optimization
+
+Candidate blocks group compatible tasks using date, section, track, duration, risk, priority, criticality, and maintenance-window information.
+
+Candidate-generation feasibility is deliberately distinct from operational clearance.
+
+## Operational assessment
+
+Candidate blocks can be assessed against:
+
+### Train occupancy
+- section and track movement coverage
+- occupied intervals
+- maintenance duration
+- candidate windows
+
+### Safety
+- minimum block duration
+- minimum clearance
+- required isolation/protection
+- required personnel
+
+### Resources
+- task-resource mappings
+- crew/personnel
+- machine availability
+- material availability
+- availability windows
+
+### Independent component states
 
 ```text
-                 ML Model
-                    |
-                    v
-              Optimization
-                    |
-                    v
-            Candidate Plan
-                    |
-                    v
-            Safety Validator
-               /        \
-              /          \
-          VALID          INVALID
-            |               |
-            v               v
-      Recommendation       Reject
-            |
-            v
-      Human Planner
+Maintenance   PASS / INFEASIBLE
+Safety        PASS / DATA_GAP / REVIEW
+Train         PASS / CONFLICT / DATA_GAP
+Resources     PASS / CONFLICT / DATA_GAP
+Materials     PASS / CONFLICT / DATA_GAP
 ```
 
-Safety constraints are treated as **hard constraints**, not simply as weighted objectives.
+A data gap is not silently converted to a pass.
 
-Rail-Yojna is not intended to directly control:
+## Historical validation
 
-* railway signalling
-* interlocking systems
-* train movement authority
-* automatic route setting
-* safety-critical field equipment
-
-The project is intended for research and decision-support purposes.
-
----
-
-# Architecture
+The project independently validates historical maintenance/train relationships. A reproduced case is:
 
 ```text
-                         RAIL-YOJNA
-                              |
-        +---------------------+---------------------+
-        |                     |                     |
-        v                     v                     v
-   Data Layer              ML Layer          Optimization Layer
-        |                     |                     |
-        |              Risk / Prediction       Scheduling
-        |              Feature Engineering    Resource Allocation
-        |              Model Evaluation        Block Planning
-        |                     |                     |
-        +---------------------+---------------------+
-                              |
-                              v
-                      Simulation Layer
-                              |
-                              v
-                     Safety Validator
-                              |
-                              v
-                       Decision Engine
-                              |
-                              v
-                         FastAPI
-                              |
-                              v
-                         Dashboard
+Task:       TASK00000010
+Date:       2023-01-21
+Section:    SEC00000254
+Track:      TRK00000449
+Duration:   213 minutes
+Train:      TRAIN00001602
+Movement:   MOVE00095202
+Observed:   train overlap reproduced
 ```
 
----
+A full-duration train-free alternative window was also identified from the historical records.
 
-# Railway Domain Model
+This demonstrates prototype validation against source records rather than relying solely on UI demonstrations.
 
-The project is being designed around connected railway entities rather than a single flat dataset.
-
-Core entities include:
+## Data model
 
 ```text
 Network
-   |
-Stations
-   |
-Track Sections
-   |
-Tracks
-   |
+  ↓
+Stations / Sections / Tracks
+  ↓
 Assets
-   |
-Condition History
-   |
-Defects
-   |
+  ↓
+Condition / Inspections / Defects
+  ↓
 Maintenance Tasks
-   |
-Block Requests
-   |
+  ↓
 Blocks
-   |
-Train Movements
-   |
-Delays
-   |
-Resources
-   |
-Weather
-   |
-Incidents
+  ↓
+Train Movements / Delays
+  ↓
+Resources / Machines / Materials
+  ↓
+Safety Constraints
+  ↓
+Planning Decisions / Audit
 ```
 
-The temporal relationship between these entities is particularly important.
+The research dataset is synthetic and emphasizes relational consistency, temporal consistency, causal structure, leakage prevention, reproducibility, and controlled missingness.
 
-For example:
-
-```text
-Asset condition decreases
-        |
-        v
-Defect detected
-        |
-        v
-Maintenance requested
-        |
-        v
-Block planning
-        |
-        +----------+
-        |          |
-        v          v
-    Block      Block denied
-    granted         |
-        |           v
-        |       Condition worsens
-        |           |
-        +-----------+
-                    |
-                    v
-              Failure / Incident
-                    |
-                    v
-              Emergency block
-                    |
-                    v
-               Train delay
-```
-
-This temporal structure is important for both machine learning and planning.
-
----
-
-# Dataset
-
-Rail-Yojna uses a large relational research dataset rather than a single flat CSV file.
-
-The dataset is intended to contain interconnected information covering areas such as:
-
-* railway infrastructure
-* stations and track sections
-* assets
-* inspections
-* asset condition
-* defects
-* maintenance activities
-* maintenance execution
-* block requests
-* granted and actual blocks
-* train schedules and movements
-* delays
-* resources and availability
-* machines
-* weather
-* incidents
-* emergency maintenance
-* costs
-* materials
-* railway constraints
-* signalling
-* planning decisions
-* timetable versions
-* block-plan versions
-* traffic demand
-* data provenance
-
-The dataset is being generated as **synthetic research data** and will be explicitly identified as such.
-
-Synthetic data will not be treated as proof of real-world railway performance.
-
----
-
-# Data Principles
-
-The dataset and subsequent processing follow several principles:
-
-### Relational consistency
-
-Records should reference valid entities through foreign keys.
-
-### Temporal consistency
-
-Events should occur in realistic chronological order.
-
-For example:
-
-```text
-defect_detected <= maintenance_start <= maintenance_end
-```
-
-where applicable.
-
-### Causal relationships
-
-Important events should not be generated as completely independent random rows.
-
-For example:
-
-```text
-asset degradation
-        ↓
-defect probability
-        ↓
-maintenance requirement
-        ↓
-block request
-        ↓
-planning outcome
-        ↓
-operational consequence
-```
-
-### No target leakage
-
-Features used for prediction must not contain information that would only become available after the prediction point.
-
-### Controlled imperfections
-
-Real-world data is imperfect. The research dataset may therefore contain controlled missing values, measurement noise, and other data-quality challenges, while preserving known ground truth where necessary for validation.
-
----
-
-# Machine Learning
-
-Machine learning will be used where the available data supports a meaningful prediction problem.
-
-Possible tasks include:
-
-```text
-Asset data
-    ↓
-Feature engineering
-    ↓
-ML model
-    ↓
-Risk / prediction
-```
-
-Potential models include:
-
-* baseline statistical models
-* linear models
-* tree-based models
-* gradient boosting
-* XGBoost
-* LightGBM
-* CatBoost
-
-More complex models will only be introduced when justified by the problem and dataset.
-
-Model evaluation will use appropriate temporal validation rather than relying only on random train/test splitting when the problem requires time-aware evaluation.
-
----
-
-# Optimization
-
-The optimization layer addresses the planning question:
-
-> **What maintenance should be performed, where, when, and with which available resources while satisfying the required constraints?**
-
-A simplified objective may combine:
-
-```text
-Maintenance risk
-+ train disruption
-+ maintenance cost
-+ resource inefficiency
-```
-
-subject to hard constraints such as:
-
-```text
-Safety
-Track availability
-Train conflicts
-Resource availability
-Maintenance duration
-Operational rules
-Isolation requirements
-Precedence relationships
-```
-
-The optimization layer is expected to use constraint programming and operations-research techniques, with OR-Tools being a primary candidate for the prototype.
-
----
-
-# Simulation
-
-Simulation will be used to test candidate planning decisions under different scenarios.
-
-Example:
-
-```text
-Current railway state
-        |
-        +---- Maintenance Plan A
-        |
-        +---- Maintenance Plan B
-        |
-        +---- Maintenance Plan C
-```
-
-Each scenario can be evaluated for:
-
-* affected trains
-* expected delays
-* maintenance completion
-* resource utilization
-* block utilization
-* conflicts
-* constraint violations
-* operational impact
-
-The goal is to compare plans before they are considered for real-world execution.
-
----
-
-# Technology Stack
-
-### Backend
-
-* Python
-* FastAPI
-* Pydantic
-* SQLAlchemy
-* PostgreSQL
-
-### Data Engineering
-
-* Pandas
-* Polars
-* NumPy
-* PyArrow
-* SciPy
-
-### Machine Learning
-
-* Scikit-learn
-* XGBoost
-* LightGBM
-* CatBoost
-* Optuna
-
-### Optimization
-
-* OR-Tools
-
-### Simulation / Network Modelling
-
-* NetworkX
-* GeoPandas
-* Shapely
-
-### Visualization
-
-* Matplotlib
-* Seaborn
-* Plotly
-
-### Experiment Tracking / Evaluation
-
-* MLflow
-* Evidently
-
-### Testing and Code Quality
-
-* Pytest
-* Ruff
-* Black
-* MyPy
-* Pre-commit
-
----
-
-# Repository Structure
+## Repository structure
 
 ```text
 Rail-Yojna/
-│
-├── backend/
-│   └── app/
-│       ├── api/
-│       ├── core/
-│       ├── models/
-│       ├── schemas/
-│       ├── services/
-│       └── main.py
-│
-├── ml/
-│   ├── data/
-│   ├── features/
-│   ├── models/
-│   ├── training/
-│   └── inference/
-│
-├── optimization/
-│   ├── models/
-│   ├── constraints/
-│   ├── solvers/
-│   └── scenarios/
-│
-├── data/
-│   ├── raw/
-│   ├── processed/
-│   ├── metadata/
-│   └── validation/
-│
-├── notebooks/
-│
-├── tests/
-│   ├── unit/
-│   └── integration/
-│
-├── docs/
-│
-├── scripts/
-│
-├── .env.example
+├── backend/                 # FastAPI application
+├── frontend/                # React planner dashboard
+├── ml/                      # ML inference/model artifacts
+├── optimization/            # Planning and optimization artifacts
+├── railway/                 # Railway-domain modules
+├── data/                    # Research data
+├── simulation/              # Simulation/scenario layer
+├── docs/                    # Architecture and research documentation
+├── scripts/                 # Reproducible engineering scripts
+├── tests/                   # Unit/integration/E2E tests
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
----
+## Local development
 
-# Development Roadmap
+### Backend
 
-## Phase 1 — Infrastructure
-
-* [x] Repository initialized
-* [x] Development branches created
-* [x] Python dependency stack established
-* [ ] Backend skeleton
-* [ ] Configuration system
-* [ ] Logging
-* [ ] Testing framework
-* [ ] Database layer
-
-## Phase 2 — Dataset
-
-* [ ] Generate large synthetic dataset
-* [ ] Validate schema
-* [ ] Validate foreign-key relationships
-* [ ] Validate timestamps
-* [ ] Check missingness
-* [ ] Check duplicates
-* [ ] Detect impossible values
-* [ ] Generate data dictionary
-* [ ] Generate relationship documentation
-* [ ] Produce data-quality report
-
-## Phase 3 — Data Pipeline
-
-* [ ] Data ingestion
-* [ ] Cleaning
-* [ ] Validation
-* [ ] Feature engineering
-* [ ] Temporal dataset construction
-* [ ] Train/validation/test splits
-
-## Phase 4 — Machine Learning
-
-* [ ] Define prediction targets
-* [ ] Establish baselines
-* [ ] Train candidate models
-* [ ] Evaluate models
-* [ ] Compare models
-* [ ] Model versioning
-* [ ] Inference pipeline
-
-## Phase 5 — Optimization
-
-* [ ] Railway topology model
-* [ ] Maintenance task model
-* [ ] Resource model
-* [ ] Train conflict model
-* [ ] Hard safety constraints
-* [ ] Block-planning solver
-* [ ] Objective function
-* [ ] Scenario comparison
-
-## Phase 6 — Simulation
-
-* [ ] Scenario generation
-* [ ] Schedule simulation
-* [ ] Delay propagation
-* [ ] Resource simulation
-* [ ] Maintenance execution simulation
-* [ ] Plan comparison
-
-## Phase 7 — Safety and Decision Support
-
-* [ ] Safety validation layer
-* [ ] Constraint violation reporting
-* [ ] Recommendation explanations
-* [ ] Audit logging
-* [ ] Human approval workflow
-
-## Phase 8 — Application
-
-* [ ] FastAPI endpoints
-* [ ] Planner dashboard
-* [ ] Railway network visualization
-* [ ] Asset view
-* [ ] Maintenance planning view
-* [ ] Block planning view
-* [ ] Scenario comparison
-
-## Phase 9 — Evaluation
-
-* [ ] End-to-end testing
-* [ ] Model evaluation
-* [ ] Optimization evaluation
-* [ ] Simulation validation
-* [ ] Performance testing
-* [ ] Reproducibility testing
-* [ ] Documentation
-
----
-
-# Research Direction
-
-The project is intended to investigate how machine learning and operations research can work together in railway maintenance planning.
-
-The central pipeline is:
-
-```text
-Historical Railway Data
-          ↓
-     ML / Statistics
-          ↓
-   Risk & Predictions
-          ↓
-     Optimization
-          ↓
-    Candidate Plan
-          ↓
-   Safety Validation
-          ↓
- Human Decision Support
+```bash
+python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+curl http://127.0.0.1:8000/health
 ```
 
-The objective is not to replace railway planners.
+FastAPI docs: `http://127.0.0.1:8000/docs`
 
-The objective is to provide planners with better information about:
+### Frontend
 
-* maintenance urgency
-* operational conflicts
-* available maintenance windows
-* resource requirements
-* expected disruption
-* alternative plans
-* constraint violations
-
----
-
-# Reproducibility
-
-Experiments should use:
-
-* deterministic random seeds where appropriate
-* versioned datasets
-* versioned models
-* documented configuration
-* reproducible preprocessing
-* recorded experiment parameters
-* testable pipelines
-
-Synthetic datasets should retain their generation configuration and seed so that experiments can be reproduced.
-
----
-
-# Dataset and Research Disclaimer
-
-The initial development dataset is synthetic and intended for research, software development, testing, and experimentation.
-
-It should not be interpreted as official railway operational data or as an accurate representation of any railway operator's confidential systems, infrastructure, timetable, or safety procedures.
-
-Any real-world deployment would require validation against authoritative railway standards, operational procedures, infrastructure data, safety systems, and regulatory requirements.
-
----
-
-# Contributors
-
-Rail-Yojna is being developed collaboratively.
-
-Current development branches:
-
-```text
-main
- ├── ansh
- ├── hardik
- ├── sujal
- └── arjun
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-`ansh` is currently the primary development branch.
+### Validation
 
-The `main` branch is intended to remain the clean/stable base branch.
+```bash
+python3 -m compileall -q backend
+npm --prefix frontend run build
+python3 -m pytest -q
+```
 
----
+## Planner workflow
 
-# License
+```text
+Control Room
+    ↓
+Risk watchlist
+    ↓
+Block Planning
+    ↓
+Date / section / track filters
+    ↓
+Candidate blocks
+    ↓
+Train + safety + resource + material assessment
+    ↓
+Alternative windows
+    ↓
+Planner decision
+    ├── APPROVE
+    ├── MODIFY
+    └── REJECT
+    ↓
+Audit event
+```
 
-License information will be added as the project reaches its initial public-release stage.
+## API areas
 
+| Area | Purpose |
+|---|---|
+| Health/System | Service and data-mode information |
+| Risk | Asset risk prediction and monitoring |
+| Planning | Maintenance plan, tasks, metrics |
+| Blocks | Candidate generation and assessment |
+| Recommendations | Ranked decision support |
+| Decisions | Human review actions |
+| Audit | Decision/prediction traceability |
+| Reports | Problem-report inputs |
+
+The live OpenAPI schema at `/docs` is the authoritative API reference during development.
+
+## Technology stack
+
+- **Backend:** Python, FastAPI, Pydantic, SQLAlchemy, Uvicorn
+- **Data:** Pandas, Polars, NumPy, PyArrow, GeoPandas, NetworkX
+- **ML:** Scikit-learn, XGBoost, LightGBM, CatBoost, Optuna, MLflow, Evidently
+- **Optimization:** OR-Tools
+- **Frontend:** React 19, Vite, Leaflet, React Leaflet, Axios
+- **Engineering:** Pytest, Ruff, Black, MyPy, Pre-commit
+
+## Documentation map
+
+- [`Operational Core`](docs/architecture/operational_core.md)
+- [`System Architecture`](docs/architecture/system_architecture.md)
+- [`Data Flow`](docs/architecture/data_flow.md)
+- [`Decision Engine`](docs/architecture/decision_engine.md)
+- [`Failure Risk Model Card`](docs/ml/model_card.md)
+- [`Feature Dictionary`](docs/ml/feature_dictionary.md)
+- [`Block Planning`](docs/planning/block_planning.md)
+- [`Constraint Model`](docs/planning/constraint_model.md)
+- [`Validation Report`](docs/validation/validation_report.md)
+- [`API Reference`](docs/api/api_reference.md)
+- [`Development Setup`](docs/development/setup.md)
+- [`Testing Guide`](docs/development/testing.md)
+- [`Evaluation Protocol`](docs/research/evaluation_protocol.md)
+
+## Project status
+
+### Implemented
+
+- [x] Synthetic relational railway data
+- [x] Temporal feature engineering
+- [x] 30-day failure-risk target
+- [x] Calibrated ML inference
+- [x] Versioned maintenance-plan artifact
+- [x] Block candidate generation
+- [x] Train occupancy assessment
+- [x] Safety-rule assessment
+- [x] Resource/material assessment
+- [x] Unified block assessment
+- [x] Recommendation engine
+- [x] Human approve/modify/reject audit flow
+- [x] FastAPI backend
+- [x] React Control Room
+- [x] Historical validation
+- [x] Automated tests
+
+### In active development
+
+- [ ] Resource-aware alternative-window optimization
+- [ ] Expanded historical validation suite
+- [ ] Scenario simulation / digital-twin layer
+- [ ] Planner-grade network/GIS visualization
+- [ ] Expanded model cards and evaluation reports
+- [ ] CI/CD and reproducible deployment
+
+### Future research
+
+- authoritative timetable/possession integration
+- network-level conflict propagation
+- delay-impact simulation
+- multi-resource optimization
+- uncertainty-aware planning
+- scenario comparison and robustness analysis
+
+## Research and deployment limitations
+
+Rail-Yojna is a **research and decision-support prototype**.
+
+It is not an operational railway authority system, signalling/interlocking controller, train-dispatch system, or replacement for railway safety procedures.
+
+Real deployment would require authoritative infrastructure and operating data, formal safety/security processes, verification and validation, railway-domain review, and approval by the relevant organization.
+
+## Academic / placement positioning
+
+Rail-Yojna demonstrates a complete engineering chain:
+
+**Machine Learning** — risk prediction and probability calibration  
+**Data Engineering** — relational, temporal synthetic railway data and validation  
+**Operations Research** — maintenance grouping, block planning, and constraint-aware assessment  
+**Backend Engineering** — FastAPI services, modular domain logic, APIs, and audit events  
+**Frontend Engineering** — planner-oriented React Control Room  
+**Decision Science** — explainable alternatives with explicit human approval  
+**Validation** — unit/integration/E2E testing plus historical conflict reproduction
+
+## License
+
+See [`LICENSE`](LICENSE).
+
+## Project
+
+**Rail-Yojna**  
+*AI-Assisted Railway Maintenance & Block-Planning Decision Support System*  
+Repository: `AnshXGrind/Rail-Yojna`
