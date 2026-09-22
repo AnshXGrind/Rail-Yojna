@@ -245,6 +245,30 @@ npm --prefix frontend run build
 python3 -m pytest -q
 ```
 
+## Dependency profiles
+
+The Python environment is split by purpose rather than storing a full operating-system package snapshot.
+
+| File | Purpose |
+|---|---|
+| `requirements.txt` | Runtime API, data, inference, and optimization |
+| `requirements-dev.txt` | Testing and code-quality tools |
+| `requirements-ml.txt` | Training, calibration, and ML research |
+| `requirements-geo.txt` | Network/geospatial research |
+| `requirements-full.txt` | Complete development/research environment |
+
+For a normal local run:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+For full reproduction work:
+
+```bash
+python3 -m pip install -r requirements-full.txt
+```
+
 ## Planner workflow
 
 ```text
