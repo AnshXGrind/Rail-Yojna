@@ -1,12 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import LivePrediction from "./components/LivePrediction";
+import BlockPlanningModal from "./components/BlockPlanningModal";
+import Reports from "./pages/Reports";
+import Service from "./pages/Service";
 import "./App.css";
 
 const API = "http://127.0.0.1:8000/api/v1";
 
 const TASK_PAGE_OPTIONS = [25, 50, 100, 250, 500, 1000, 1500];
 const ASSET_PAGE_OPTIONS = [25, 50, 100];
+
+function getRoute() {
+  const hash = window.location.hash || "#/control";
+  const match = hash.match(/^#\/([^\/]+)(?:\/(.*))?$/);
+  return {
+    page: match?.[1] || "control",
+    id: match?.[2] || "",
+  };
+}
+
+function navigate(page, id = "") {
+  window.location.hash = id
+    ? `#/${page}/${encodeURIComponent(id)}`
+    : `#/${page}`;
+}
+
+async function loadLiveReports(setter) {
+  try {
+    const response = await axios.get(
+      `${API}/reports?limit=20`,
+    );
+
+    setter(response.data || []);
+  } catch {
+    // Report service may be temporarily unavailable.
+    // The main dashboard continues to operate normally.
+  }
+}
 
 function riskBand(value) {
   const risk = Number(value || 0);
@@ -269,6 +300,58 @@ function ListModal({
 }
 
 export default function App() {
+  const [route, setRoute] = useState(() => getRoute());
+  const [liveReports, setLiveReports] = useState([]);
+  const [reportsOpen, setReportsOpen] = useState(false);
+  const [seenReportIds, setSeenReportIds] = useState(() => {
+    try {
+      return JSON.parse(
+        localStorage.getItem("rail-yojna-seen-reports") || "[]",
+      );
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    const handleHashChange = () => setRoute(getRoute());
+    window.addEventListener("hashchange", handleHashChange);
+
+    if (!window.location.hash) {
+      navigate("control");
+    }
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    loadLiveReports(setLiveReports);
+
+    const source = new EventSource(
+      `${API}/events/stream`,
+    );
+
+    source.addEventListener("rail_yojna", (event) => {
+      try {
+        const message = JSON.parse(event.data);
+
+        if (
+          message.type === "REPORT_CREATED" ||
+          message.type === "REPORT_STATUS_CHANGED"
+        ) {
+          loadLiveReports(setLiveReports);
+        }
+      } catch {
+        // Keep the dashboard alive if an event is malformed.
+      }
+    });
+
+    return () => {
+      source.close();
+    };
+  }, []);
   const [summary, setSummary] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [assets, setAssets] = useState([]);
@@ -288,11 +371,37 @@ export default function App() {
 
   const [browse, setBrowse] = useState(null);
   const [predictionOpen, setPredictionOpen] = useState(false);
+  const [blockPlanningOpen, setBlockPlanningOpen] = useState(false);
 
   const [decisionBusy, setDecisionBusy] = useState(false);
   const [decisionMessage, setDecisionMessage] = useState("");
   const [decisionActor, setDecisionActor] = useState("planner");
   const [decisionNote, setDecisionNote] = useState("");
+
+  const unreadReports = liveReports.filter(
+    (report) => !seenReportIds.includes(report.report_id),
+  );
+
+  function openReport(report) {
+    const nextSeen = Array.from(
+      new Set([...seenReportIds, report.report_id]),
+    );
+
+    setSeenReportIds(nextSeen);
+
+    localStorage.setItem(
+      "rail-yojna-seen-reports",
+      JSON.stringify(nextSeen),
+    );
+
+    setReportsOpen(false);
+
+    if (report?.asset_id) {
+      navigate("service", report.asset_id);
+    } else {
+      navigate("reports");
+    }
+  }
 
   async function loadDashboard(initial = false) {
     try {
@@ -422,6 +531,8 @@ export default function App() {
       );
 
       setSelectedAsset(response.data);
+
+      navigate("service", assetId);
 
       const relatedTask = plan
         .filter(
@@ -602,6 +713,315 @@ export default function App() {
     );
   }
 
+  if (route.page === "reports") {
+    return (
+      <div className="app">
+        <header className="header">
+          <div className="brand">
+            <img
+              className="brand-logo"
+              src="/assets/rail-yojna-logo.png"
+              alt="रेल-योजना"
+            />
+          </div>
+
+          <div className="header-center">
+            <div className="header-title-row">
+              <div>
+                <strong>Field Problem Reports</strong>
+                <span>Capture and route field observations</span>
+              </div>
+
+              <nav className="top-nav" aria-label="Primary">
+                <button
+                  className="nav-tab"
+                  onClick={() => navigate("control")}
+                >
+                  Control Room
+                </button>
+                <button className="nav-tab active">
+                  Reports
+                </button>
+                <button
+                  className="nav-tab"
+                  onClick={() => navigate("service")}
+                >
+                  Service
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          <div className="header-actions">
+            <button
+              className={`live-reports-button ${
+                unreadReports.length ? "has-new" : ""
+              }`}
+              onClick={() =>
+                setReportsOpen((value) => !value)
+              }
+            >
+              <span className="live-reports-icon">●</span>
+              Live Reports
+              {unreadReports.length > 0 && (
+                <b>{unreadReports.length}</b>
+              )}
+            </button>
+
+            <span className="connection online">
+              <i />
+              Live
+            </span>
+          </div>
+        </header>
+
+        {reportsOpen && (
+          <div
+            className="live-reports-popover"
+            onMouseDown={(event) => {
+                if (event.target === event.currentTarget) {
+                  setReportsOpen(false);
+                }
+            }}
+          >
+            <div className="live-reports-panel">
+                <div className="live-reports-header">
+                  <div>
+                    <span className="section-kicker">LIVE FEED</span>
+                    <h3>Incoming reports</h3>
+                  </div>
+
+                  <button
+                    className="modal-close"
+                    onClick={() => setReportsOpen(false)}
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="live-reports-list">
+                  {liveReports.length === 0 ? (
+                    <div className="empty">
+                        No reports received yet.
+                    </div>
+                  ) : (
+                    liveReports.slice(0, 12).map((report) => {
+                        const unread = !seenReportIds.includes(
+                          report.report_id,
+                        );
+
+                        return (
+                          <button
+                            key={report.report_id}
+                            className={`live-report-row ${
+                                unread ? "unread" : ""
+                            }`}
+                            onClick={() => openReport(report)}
+                          >
+                            <span className="live-report-dot" />
+
+                            <span className="live-report-main">
+                                <strong>{report.report_id}</strong>
+                                <span>
+                                  {report.problem_type} · {report.asset_id}
+                                </span>
+                                <small>
+                                  {new Date(
+                                    report.created_at,
+                                  ).toLocaleString()}
+                                </small>
+                            </span>
+
+                            <span
+                                className={`report-severity ${String(
+                                  report.severity || "",
+                                ).toLowerCase()}`}
+                            >
+                                {report.severity}
+                            </span>
+                          </button>
+                        );
+                    })
+                  )}
+                </div>
+
+                <div className="live-reports-footer">
+                  <button
+                    className="button secondary"
+                    onClick={() => {
+                        setReportsOpen(false);
+                        navigate("reports");
+                    }}
+                  >
+                    Open Reports
+                  </button>
+                </div>
+            </div>
+          </div>
+        )}
+
+        <Reports
+          onServiceOpen={(assetId) => navigate("service", assetId)}
+        />
+      </div>
+    );
+  }
+
+  if (route.page === "service") {
+    return (
+      <div className="app">
+        <header className="header">
+          <div className="brand">
+            <img
+              className="brand-logo"
+              src="/assets/rail-yojna-logo.png"
+              alt="रेल-योजना"
+            />
+          </div>
+
+          <div className="header-center">
+            <div className="header-title-row">
+              <div>
+                <strong>Asset Service</strong>
+                <span>Live asset state and maintenance context</span>
+              </div>
+
+              <nav className="top-nav" aria-label="Primary">
+                <button
+                  className="nav-tab"
+                  onClick={() => navigate("control")}
+                >
+                  Control Room
+                </button>
+                <button
+                  className="nav-tab"
+                  onClick={() => navigate("reports")}
+                >
+                  Reports
+                </button>
+                <button className="nav-tab active">
+                  Service
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          <div className="header-actions">
+            <button
+              className={`live-reports-button ${
+                unreadReports.length ? "has-new" : ""
+              }`}
+              onClick={() =>
+                setReportsOpen((value) => !value)
+              }
+            >
+              <span className="live-reports-icon">●</span>
+              Live Reports
+              {unreadReports.length > 0 && (
+                <b>{unreadReports.length}</b>
+              )}
+            </button>
+
+            <span className="connection online">
+              <i />
+              Live
+            </span>
+          </div>
+        </header>
+
+        {reportsOpen && (
+          <div
+            className="live-reports-popover"
+            onMouseDown={(event) => {
+                if (event.target === event.currentTarget) {
+                  setReportsOpen(false);
+                }
+            }}
+          >
+            <div className="live-reports-panel">
+                <div className="live-reports-header">
+                  <div>
+                    <span className="section-kicker">LIVE FEED</span>
+                    <h3>Incoming reports</h3>
+                  </div>
+
+                  <button
+                    className="modal-close"
+                    onClick={() => setReportsOpen(false)}
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="live-reports-list">
+                  {liveReports.length === 0 ? (
+                    <div className="empty">
+                        No reports received yet.
+                    </div>
+                  ) : (
+                    liveReports.slice(0, 12).map((report) => {
+                        const unread = !seenReportIds.includes(
+                          report.report_id,
+                        );
+
+                        return (
+                          <button
+                            key={report.report_id}
+                            className={`live-report-row ${
+                                unread ? "unread" : ""
+                            }`}
+                            onClick={() => openReport(report)}
+                          >
+                            <span className="live-report-dot" />
+
+                            <span className="live-report-main">
+                                <strong>{report.report_id}</strong>
+                                <span>
+                                  {report.problem_type} · {report.asset_id}
+                                </span>
+                                <small>
+                                  {new Date(
+                                    report.created_at,
+                                  ).toLocaleString()}
+                                </small>
+                            </span>
+
+                            <span
+                                className={`report-severity ${String(
+                                  report.severity || "",
+                                ).toLowerCase()}`}
+                            >
+                                {report.severity}
+                            </span>
+                          </button>
+                        );
+                    })
+                  )}
+                </div>
+
+                <div className="live-reports-footer">
+                  <button
+                    className="button secondary"
+                    onClick={() => {
+                        setReportsOpen(false);
+                        navigate("reports");
+                    }}
+                  >
+                    Open Reports
+                  </button>
+                </div>
+            </div>
+          </div>
+        )}
+
+        <Service
+          assetId={route.id}
+          onControlOpen={() => navigate("control")}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -614,13 +1034,63 @@ export default function App() {
         </div>
 
         <div className="header-center">
-          <strong>Maintenance Operations</strong>
-          <span>
-            Risk, maintenance priority and human review
-          </span>
+          <div className="header-title-row">
+            <div>
+              <strong>
+                {route.page === "reports"
+                  ? "Field Problem Reports"
+                  : route.page === "service"
+                    ? "Asset Service"
+                    : "Maintenance Operations"}
+              </strong>
+              <span>
+                {route.page === "reports"
+                  ? "Capture and route field observations"
+                  : route.page === "service"
+                    ? "Live asset state and maintenance context"
+                    : "Risk, maintenance priority and human review"}
+              </span>
+            </div>
+
+            <nav className="top-nav" aria-label="Primary">
+              <button
+                className={`nav-tab ${route.page === "control" ? "active" : ""}`}
+                onClick={() => navigate("control")}
+              >
+                Control Room
+              </button>
+              <button
+                className={`nav-tab ${route.page === "reports" ? "active" : ""}`}
+                onClick={() => navigate("reports")}
+              >
+                Reports
+              </button>
+              <button
+                className={`nav-tab ${route.page === "service" ? "active" : ""}`}
+                onClick={() => navigate("service", route.id)}
+              >
+                Service
+              </button>
+            </nav>
+          </div>
         </div>
 
         <div className="header-actions">
+          <button
+            className={`live-reports-button ${
+              unreadReports.length ? "has-new" : ""
+            }`}
+            onClick={() =>
+              setReportsOpen((value) => !value)
+            }
+          >
+            <span className="live-reports-icon">●</span>
+            Live Reports
+            {unreadReports.length > 0 && (
+              <b>{unreadReports.length}</b>
+            )}
+          </button>
+
           <span
             className={
               system
@@ -641,6 +1111,13 @@ export default function App() {
           </button>
 
           <button
+            className="button block-primary"
+            onClick={() => setBlockPlanningOpen(true)}
+          >
+            Block Planning
+          </button>
+
+          <button
             className="button primary"
             onClick={() =>
               setPredictionOpen(true)
@@ -650,6 +1127,91 @@ export default function App() {
           </button>
         </div>
       </header>
+
+      {reportsOpen && (
+        <div
+          className="live-reports-popover"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setReportsOpen(false);
+            }
+          }}
+        >
+          <div className="live-reports-panel">
+            <div className="live-reports-header">
+              <div>
+                <span className="section-kicker">LIVE FEED</span>
+                <h3>Incoming reports</h3>
+              </div>
+
+              <button
+                className="modal-close"
+                onClick={() => setReportsOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="live-reports-list">
+              {liveReports.length === 0 ? (
+                <div className="empty">
+                  No reports received yet.
+                </div>
+              ) : (
+                liveReports.slice(0, 12).map((report) => {
+                  const unread = !seenReportIds.includes(
+                    report.report_id,
+                  );
+
+                  return (
+                    <button
+                      key={report.report_id}
+                      className={`live-report-row ${
+                        unread ? "unread" : ""
+                      }`}
+                      onClick={() => openReport(report)}
+                    >
+                      <span className="live-report-dot" />
+
+                      <span className="live-report-main">
+                        <strong>{report.report_id}</strong>
+                        <span>
+                          {report.problem_type} · {report.asset_id}
+                        </span>
+                        <small>
+                          {new Date(
+                            report.created_at,
+                          ).toLocaleString()}
+                        </small>
+                      </span>
+
+                      <span
+                        className={`report-severity ${String(
+                          report.severity || "",
+                        ).toLowerCase()}`}
+                      >
+                        {report.severity}
+                      </span>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="live-reports-footer">
+              <button
+                className="button secondary"
+                onClick={() => {
+                  setReportsOpen(false);
+                  navigate("reports");
+                }}
+              >
+                Open Reports
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="error-banner">
@@ -1296,6 +1858,12 @@ export default function App() {
           onSelect={(asset) =>
             openAsset(asset.asset_id)
           }
+        />
+      )}
+
+      {blockPlanningOpen && (
+        <BlockPlanningModal
+          onClose={() => setBlockPlanningOpen(false)}
         />
       )}
 
