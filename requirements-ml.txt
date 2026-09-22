@@ -1,0 +1,16 @@
+# Rail-Yojna — optional ML research/training dependencies
+#
+# Install this file when reproducing model training/evaluation work.
+
+-r requirements.txt
+
+scipy==1.18.1
+xgboost==3.4.1
+lightgbm==4.7.0
+catboost==1.2.10
+optuna==5.0.0
+mlflow==3.16.0
+evidently==0.7.23
+matplotlib==3.11.2
+seaborn==0.13.2
+plotly==5.24.1
