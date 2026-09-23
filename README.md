@@ -224,7 +224,7 @@ Rail-Yojna/
 
 ```bash
 python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
-curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:8000/api/v1/health
 ```
 
 FastAPI docs: `http://127.0.0.1:8000/docs`
