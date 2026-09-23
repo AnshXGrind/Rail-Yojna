@@ -1,24 +1,18 @@
+from fastapi.testclient import TestClient
+
+
 def test_backend_imports_and_routes():
-    from backend.app.api import routes as primary_routes
     from backend.app.main import app
 
-    print("main module:", __import__("backend.app.main", fromlist=["__file__"]).__file__)
-    print("routes module:", primary_routes.__file__)
-    print("primary router routes:", [
-        getattr(route, "path", "")
-        for route in primary_routes.router.routes
-    ])
-    print("app routes:", [
-        getattr(route, "path", "")
-        for route in app.routes
-    ])
+    client = TestClient(app)
 
-    paths = {
-        getattr(route, "path", "")
-        for route in app.routes
-    }
+    assert client.get("/").status_code == 200
+    assert client.get("/api/v1/health").status_code == 200
 
-    assert primary_routes.router.routes
-    assert "/" in paths
-    assert "/api/v1/health" in paths
-    assert "/api/v1/planning/blocks/{block_id}/optimized-windows" in paths
+    openapi_paths = app.openapi()["paths"]
+
+    assert "/api/v1/health" in openapi_paths
+    assert (
+        "/api/v1/planning/blocks/{block_id}/optimized-windows"
+        in openapi_paths
+    )
