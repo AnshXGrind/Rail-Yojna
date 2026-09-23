@@ -28,6 +28,18 @@ OUT = ROOT / "docs" / "assets" / "demo"
 BASE = "http://127.0.0.1:5173"
 
 
+async def open_page(page, path: str, ready_selector: str) -> None:
+    await page.goto(
+        f"{BASE}/#{path}",
+        wait_until="domcontentloaded",
+    )
+    await page.wait_for_selector(
+        ready_selector,
+        state="visible",
+        timeout=30_000,
+    )
+
+
 async def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
@@ -38,29 +50,34 @@ async def main() -> None:
             device_scale_factor=1,
         )
 
-        await page.goto(f"{BASE}/#/control", wait_until="networkidle")
+        await open_page(page, "/control", ".dashboard")
         await page.screenshot(
             path=str(OUT / "control-room.png"),
             full_page=True,
         )
 
-        block_button = page.get_by_role(
+        await page.get_by_role(
             "button",
             name="Block Planning",
-        )
-        await block_button.click()
+        ).click()
+
+        await page.get_by_text(
+            "Block Planning Center",
+            exact=True,
+        ).wait_for(state="visible", timeout=10_000)
+
         await page.screenshot(
             path=str(OUT / "block-planning.png"),
             full_page=True,
         )
 
-        await page.goto(f"{BASE}/#/reports", wait_until="networkidle")
+        await open_page(page, "/reports", ".module-page")
         await page.screenshot(
             path=str(OUT / "reports.png"),
             full_page=True,
         )
 
-        await page.goto(f"{BASE}/#/service", wait_until="networkidle")
+        await open_page(page, "/service", ".module-page")
         await page.screenshot(
             path=str(OUT / "service.png"),
             full_page=True,
